@@ -24,7 +24,7 @@ View your app in AI Studio: https://ai.studio/apps/6d40de99-dc2b-425e-9a04-63265
 <img width="500" height="500" alt="Splash" src="splash.png" />
 </div>
 
-**-----------------------------------------------------------------------------------------------------------------------------------------------------**
+**---------------------------------------------------------------------------------------------------------------------------**
 # 🚀 Momento - Your All-in-One Life Management Companion
 
 > Simplify your life, stay organized, and achieve your goals with a single powerful platform.
