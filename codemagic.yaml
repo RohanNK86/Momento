@@ -12,6 +12,9 @@ workflows:
       - name: Generate Gradle Wrapper
         script: |
           gradle wrapper --gradle-version 9.3.1
+      - name: Generate debug keystore
+        script: |
+          keytool -genkey -v -keystore "$CM_BUILD_DIR/debug.keystore" -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "cn=Unknown, ou=Unknown, o=Unknown, c=Unknown"
       - name: Build Android App (Debug)
         script: |
           ./gradlew assembleDebug
