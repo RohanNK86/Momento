@@ -20,6 +20,9 @@ View your app in AI Studio: https://ai.studio/apps/6d40de99-dc2b-425e-9a04-63265
 5. Remove this line from the app's `build.gradle.kts` file: `signingConfig = signingConfigs.getByName("debugConfig")`
 6. Run the app on an emulator or physical device
 
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="splash.png" />
+</div>
 **-----------------------------------------------------------------------------------------------------------------------------------------------------**
 # 🚀 Momento - Your All-in-One Life Management Companion
 
