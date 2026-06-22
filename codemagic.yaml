@@ -2,7 +2,7 @@ workflows:
   android-workflow:
     name: Momento Android Build
     max_build_duration: 120
-    instance_type: mac_mini_m1
+    instance_type: mac_mini_m2
     environment:
       java: 17
     scripts:
@@ -11,7 +11,7 @@ workflows:
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
       - name: Generate Gradle Wrapper
         script: |
-          gradle wrapper
+          gradle wrapper --gradle-version 9.3.1
       - name: Build Android App (Debug)
         script: |
           ./gradlew assembleDebug
