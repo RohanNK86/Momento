@@ -12,9 +12,13 @@
 #   public *;
 #}
 
+# Keep our data classes and viewmodels to avoid issues with serialization/Room
+-keep class com.example.data.** { *; }
+-keep class com.example.viewmodel.** { *; }
+
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
