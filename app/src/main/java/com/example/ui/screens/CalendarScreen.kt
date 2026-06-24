@@ -1,6 +1,7 @@
 package com.example.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -64,6 +65,7 @@ fun CalendarScreen(viewModel: MomentoViewModel) {
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     val days = (1..31).toList()
+                    var selectedDay by remember { mutableStateOf(10) }
                     Column {
                         for (i in 0 until 5) {
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -71,7 +73,7 @@ fun CalendarScreen(viewModel: MomentoViewModel) {
                                     val index = i * 7 + j
                                     if (index < days.size) {
                                         val day = days[index]
-                                        val isToday = day == 10
+                                        val isToday = day == selectedDay
                                         Box(
                                             modifier = Modifier
                                                 .weight(1f)
@@ -83,7 +85,8 @@ fun CalendarScreen(viewModel: MomentoViewModel) {
                                                     if (isToday) 1.dp else 0.dp,
                                                     if (isToday) MomentoPrimary else Color.Transparent,
                                                     RoundedCornerShape(8.dp)
-                                                ),
+                                                )
+                                                .clickable { selectedDay = day },
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Text(day.toString(), color = if (isToday) MomentoPrimary else MomentoOnSurface, fontWeight = if (isToday) FontWeight.Bold else FontWeight.Normal)

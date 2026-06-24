@@ -23,6 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Icon
+import androidx.compose.material3.FloatingActionButton
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.ui.components.BottomNavBar
@@ -58,11 +62,13 @@ fun MomentoApp() {
     var showGoalDialog by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
     var showEventDialog by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
     var showExpenseDialog by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    var showFocusMode by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
 
     if (showTaskDialog) com.example.ui.components.AddTaskDialog(onDismiss = { showTaskDialog = false }) { title, priority -> viewModel.addTask(title, priority) }
     if (showGoalDialog) com.example.ui.components.AddGoalDialog(onDismiss = { showGoalDialog = false }) { title -> viewModel.addGoal(title, 0f) }
     if (showEventDialog) com.example.ui.components.AddEventDialog(onDismiss = { showEventDialog = false }) { title, category -> viewModel.addEvent(title, System.currentTimeMillis(), category) }
     if (showExpenseDialog) com.example.ui.components.AddExpenseDialog(onDismiss = { showExpenseDialog = false }) { title, amount, category -> viewModel.addExpense(title, amount, category) }
+    if (showFocusMode) com.example.ui.components.FocusModeDialog(onDismiss = { showFocusMode = false })
 
     Scaffold(
         bottomBar = {
@@ -75,12 +81,25 @@ fun MomentoApp() {
             }
         },
         floatingActionButton = {
-            com.example.ui.components.FabMenu(
-                onAddTask = { showTaskDialog = true },
-                onAddGoal = { showGoalDialog = true },
-                onAddEvent = { showEventDialog = true },
-                onAddExpense = { showExpenseDialog = true }
-            )
+            FloatingActionButton(
+                onClick = {
+                    when (currentRoute) {
+                        "tasks" -> showTaskDialog = true
+                        "goals" -> showGoalDialog = true
+                        "calendar" -> showEventDialog = true
+                        "expenses" -> showExpenseDialog = true
+                        else -> showTaskDialog = true
+                    }
+                },
+                containerColor = Color.Transparent,
+                modifier = Modifier
+                    .background(
+                        brush = Brush.linearGradient(listOf(MomentoPrimary, MomentoSecondary)),
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+                    )
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Add", tint = Color.White)
+            }
         }
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize().background(MomentoBackground)) {
@@ -108,7 +127,7 @@ fun MomentoApp() {
             
             Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
                 NavHost(navController, startDestination = "home") {
-                    composable("home") { DashboardScreen(viewModel) }
+                    composable("home") { DashboardScreen(viewModel, onFocusModeClick = { showFocusMode = true }) }
                     composable("tasks") { TasksScreen(viewModel) }
                     composable("goals") { GoalsScreen(viewModel) }
                     composable("calendar") { CalendarScreen(viewModel) }

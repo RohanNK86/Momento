@@ -1,6 +1,7 @@
 package com.example.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,7 +26,7 @@ import com.example.ui.theme.*
 import com.example.viewmodel.MomentoViewModel
 
 @Composable
-fun DashboardScreen(viewModel: MomentoViewModel) {
+fun DashboardScreen(viewModel: MomentoViewModel, onFocusModeClick: () -> Unit = {}) {
     val tasks by viewModel.tasks.collectAsStateWithLifecycle()
     val goals by viewModel.goals.collectAsStateWithLifecycle()
     val events by viewModel.events.collectAsStateWithLifecycle()
@@ -46,7 +47,7 @@ fun DashboardScreen(viewModel: MomentoViewModel) {
                     Text("You have ${tasks.count { !it.isCompleted }} high-priority tasks and ${events.size} event today.", style = MaterialTheme.typography.bodyMedium, color = MomentoOnSurfaceVariant)
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(
-                        onClick = { },
+                        onClick = onFocusModeClick,
                         modifier = Modifier.fillMaxWidth().height(48.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = MomentoPrimaryContainer, contentColor = MomentoOnPrimaryContainer),
                         shape = RoundedCornerShape(12.dp)
@@ -67,8 +68,9 @@ fun DashboardScreen(viewModel: MomentoViewModel) {
         }
         item {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                val totalExpenses = expenses.sumOf { it.amount }
                 StatCard(modifier = Modifier.weight(1f), icon = Icons.Default.CalendarMonth, title = "Events", value = events.size.toString(), subText = "Today", color = MomentoSecondary)
-                StatCard(modifier = Modifier.weight(1f), icon = Icons.Default.Payments, title = "Expenses", value = "$1.2k", subText = "↓ 5%", color = MomentoError)
+                StatCard(modifier = Modifier.weight(1f), icon = Icons.Default.Payments, title = "Expenses", value = "$${String.format(java.util.Locale.US, "%.0f", totalExpenses)}", subText = "↓ 5%", color = MomentoError)
             }
         }
 
@@ -90,7 +92,7 @@ fun DashboardScreen(viewModel: MomentoViewModel) {
                                     .padding(16.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Box(modifier = Modifier.size(20.dp).border(2.dp, MomentoPrimary, RoundedCornerShape(4.dp)))
+                                Box(modifier = Modifier.size(20.dp).background(if(task.isCompleted) MomentoPrimary else Color.Transparent, RoundedCornerShape(4.dp)).border(2.dp, MomentoPrimary, RoundedCornerShape(4.dp)).clickable { viewModel.toggleTaskCompletion(task) })
                                 Spacer(modifier = Modifier.width(16.dp))
                                 Column {
                                     Text(task.title, style = MaterialTheme.typography.bodyLarge, color = MomentoOnSurface)

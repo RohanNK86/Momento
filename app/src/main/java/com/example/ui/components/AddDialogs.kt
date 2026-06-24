@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.data.Task
 import com.example.ui.theme.*
@@ -211,6 +212,57 @@ fun AddExpenseDialog(onDismiss: () -> Unit, onAdd: (String, Double, String) -> U
                         }
                     ) {
                         Text("Add")
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun FocusModeDialog(onDismiss: () -> Unit) {
+    androidx.compose.ui.window.Dialog(
+        onDismissRequest = onDismiss,
+        properties = androidx.compose.ui.window.DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MomentoBackground)
+                .padding(32.dp),
+            contentAlignment = androidx.compose.ui.Alignment.Center
+        ) {
+            Column(horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(24.dp)) {
+                Text("Focus Mode", style = MaterialTheme.typography.displayLarge, color = MomentoOnSurface)
+                Text("Minimize distractions and focus on what matters.", style = MaterialTheme.typography.bodyLarge, color = MomentoOnSurfaceVariant, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                
+                var timeLeft by remember { mutableStateOf(25 * 60) } // 25 minutes
+                var isRunning by remember { mutableStateOf(false) }
+
+                LaunchedEffect(isRunning) {
+                    while(isRunning && timeLeft > 0) {
+                        kotlinx.coroutines.delay(1000)
+                        timeLeft--
+                    }
+                }
+
+                val minutes = timeLeft / 60
+                val seconds = timeLeft % 60
+                Text(
+                    text = String.format(java.util.Locale.US, "%02d:%02d", minutes, seconds),
+                    style = MaterialTheme.typography.displayLarge.copy(fontSize = 72.sp),
+                    color = MomentoPrimary
+                )
+
+                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Button(
+                        onClick = { isRunning = !isRunning },
+                        colors = ButtonDefaults.buttonColors(containerColor = if (isRunning) MomentoSecondary else MomentoPrimary)
+                    ) {
+                        Text(if (isRunning) "Pause" else "Start Focus")
+                    }
+                    OutlinedButton(onClick = onDismiss, colors = ButtonDefaults.outlinedButtonColors(contentColor = MomentoOnSurface)) {
+                        Text("Exit")
                     }
                 }
             }
