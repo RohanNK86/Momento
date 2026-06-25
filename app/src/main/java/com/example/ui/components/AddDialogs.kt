@@ -8,12 +8,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.geometry.Size
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.window.Dialog
 import com.example.data.Task
 import com.example.ui.theme.*
 
 // ── Shared text field colors ─────────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
+@Composable
 private fun dialogTextFieldColors() = TextFieldDefaults.colors(
     focusedContainerColor   = Color.White.copy(alpha = 0.05f),
     unfocusedContainerColor = Color.White.copy(alpha = 0.05f),

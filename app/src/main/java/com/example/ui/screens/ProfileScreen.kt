@@ -251,6 +251,7 @@ private fun ProfileFieldNumeric(label: String, value: String, icon: androidx.com
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun momentoTextFieldColors() = TextFieldDefaults.colors(
     focusedContainerColor = Color.White.copy(alpha = 0.05f),
     unfocusedContainerColor = Color.White.copy(alpha = 0.03f),

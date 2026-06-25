@@ -167,7 +167,7 @@ fun TaskItemCard(task: Task, onToggle: () -> Unit, onDelete: () -> Unit, onArchi
                 .clickable(onClick = onToggle),
             contentAlignment = Alignment.Center
         ) {
-            AnimatedVisibility(visible = task.isCompleted, enter = scaleIn(), exit = scaleOut()) {
+            androidx.compose.animation.AnimatedVisibility(visible = task.isCompleted, enter = scaleIn(), exit = scaleOut()) {
                 Icon(Icons.Default.Check, null, tint = MomentoTertiary, modifier = Modifier.size(14.dp))
             }
         }
