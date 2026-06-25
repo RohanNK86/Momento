@@ -5,6 +5,8 @@ workflows:
     instance_type: mac_mini_m2
     environment:
       java: 17
+      groups:
+        - supabase_credentials
     scripts:
       - name: Create .env file for secrets
         script: |
