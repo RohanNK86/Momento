@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:width="88dp"
-        android:height="88dp"
-        android:drawable="@drawable/momento_logo_1782291361520"
-        android:gravity="center" />
+    <item>
+        <bitmap
+            android:src="@drawable/momento_logo_1782291361520"
+            android:gravity="fill"
+            android:scaleType="fitCenter" />
+    </item>
 </layer-list>
