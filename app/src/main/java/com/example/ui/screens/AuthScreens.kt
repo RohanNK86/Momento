@@ -70,9 +70,10 @@ fun LoginScreen(
 
             GlassCard {
                 Column(modifier = Modifier.padding(24.dp)) {
-                    if (viewModel.authError != null) {
+                    val currentError = viewModel.authError
+                    if (currentError != null) {
                         Text(
-                            text = viewModel.authError!!,
+                            text = currentError,
                             color = MaterialTheme.colorScheme.error,
                             fontSize = 12.sp,
                             modifier = Modifier.padding(bottom = 16.dp)
@@ -84,12 +85,14 @@ fun LoginScreen(
                         onValueChange = { email = it; viewModel.clearAuthError() },
                         label = { Text("Email", color = Color.White.copy(alpha = 0.7f)) },
                         leadingIcon = { Icon(Icons.Default.Email, contentDescription = "Email", tint = Color.White.copy(alpha = 0.7f)) },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = MomentoPrimary,
-                            unfocusedBorderColor = Color.White.copy(alpha = 0.2f),
+                        colors = TextFieldDefaults.colors(
+                            focusedIndicatorColor = MomentoPrimary,
+                            unfocusedIndicatorColor = Color.White.copy(alpha = 0.2f),
                             focusedTextColor = Color.White,
                             unfocusedTextColor = Color.White,
-                            cursorColor = MomentoPrimary
+                            cursorColor = MomentoPrimary,
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent
                         ),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         singleLine = true,
@@ -109,12 +112,14 @@ fun LoginScreen(
                                 Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide password" else "Show password", tint = Color.White.copy(alpha = 0.7f))
                             }
                         },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = MomentoPrimary,
-                            unfocusedBorderColor = Color.White.copy(alpha = 0.2f),
+                        colors = TextFieldDefaults.colors(
+                            focusedIndicatorColor = MomentoPrimary,
+                            unfocusedIndicatorColor = Color.White.copy(alpha = 0.2f),
                             focusedTextColor = Color.White,
                             unfocusedTextColor = Color.White,
-                            cursorColor = MomentoPrimary
+                            cursorColor = MomentoPrimary,
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent
                         ),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -196,9 +201,10 @@ fun RegisterScreen(
 
             GlassCard {
                 Column(modifier = Modifier.padding(24.dp)) {
-                    if (viewModel.authError != null) {
+                    val currentError = viewModel.authError
+                    if (currentError != null) {
                         Text(
-                            text = viewModel.authError!!,
+                            text = currentError,
                             color = MaterialTheme.colorScheme.error,
                             fontSize = 12.sp,
                             modifier = Modifier.padding(bottom = 16.dp)
@@ -210,12 +216,14 @@ fun RegisterScreen(
                         onValueChange = { email = it; viewModel.clearAuthError() },
                         label = { Text("Email", color = Color.White.copy(alpha = 0.7f)) },
                         leadingIcon = { Icon(Icons.Default.Email, contentDescription = "Email", tint = Color.White.copy(alpha = 0.7f)) },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = MomentoPrimary,
-                            unfocusedBorderColor = Color.White.copy(alpha = 0.2f),
+                        colors = TextFieldDefaults.colors(
+                            focusedIndicatorColor = MomentoPrimary,
+                            unfocusedIndicatorColor = Color.White.copy(alpha = 0.2f),
                             focusedTextColor = Color.White,
                             unfocusedTextColor = Color.White,
-                            cursorColor = MomentoPrimary
+                            cursorColor = MomentoPrimary,
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent
                         ),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         singleLine = true,
@@ -235,12 +243,14 @@ fun RegisterScreen(
                                 Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide password" else "Show password", tint = Color.White.copy(alpha = 0.7f))
                             }
                         },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = MomentoPrimary,
-                            unfocusedBorderColor = Color.White.copy(alpha = 0.2f),
+                        colors = TextFieldDefaults.colors(
+                            focusedIndicatorColor = MomentoPrimary,
+                            unfocusedIndicatorColor = Color.White.copy(alpha = 0.2f),
                             focusedTextColor = Color.White,
                             unfocusedTextColor = Color.White,
-                            cursorColor = MomentoPrimary
+                            cursorColor = MomentoPrimary,
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent
                         ),
                         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
