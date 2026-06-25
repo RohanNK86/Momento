@@ -270,7 +270,7 @@ fun FocusModeDialog(onDismiss: () -> Unit) {
                         drawArc(color = MomentoPrimary.copy(alpha = 0.12f), -90f, 360f, false, topLeft = androidx.compose.ui.geometry.Offset(inset, inset), size = Size(size.width - sw, size.height - sw), style = androidx.compose.ui.graphics.drawscope.Stroke(sw, cap = androidx.compose.ui.graphics.StrokeCap.Round))
                         drawArc(color = MomentoPrimary, -90f, progress * 360f, false, topLeft = androidx.compose.ui.geometry.Offset(inset, inset), size = Size(size.width - sw, size.height - sw), style = androidx.compose.ui.graphics.drawscope.Stroke(sw, cap = androidx.compose.ui.graphics.StrokeCap.Round))
                     }
-                    Text(String.format(java.util.Locale.US, "%02d:%02d", minutes, seconds), style = MaterialTheme.typography.displayMedium.copy(fontSize = androidx.compose.ui.unit.sp(48)), color = MomentoPrimary)
+                    Text(String.format(java.util.Locale.US, "%02d:%02d", minutes, seconds), style = MaterialTheme.typography.displayMedium.copy(fontSize = 48.sp), color = MomentoPrimary)
                 }
 
                 if (sessionsDone > 0) Text("✅ $sessionsDone session${if (sessionsDone > 1) "s" else ""} completed!", color = MomentoTertiary)
