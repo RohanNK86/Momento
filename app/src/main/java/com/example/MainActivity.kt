@@ -4,38 +4,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Icon
-import androidx.compose.material3.FloatingActionButton
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.ui.components.BottomNavBar
+import com.example.ui.components.*
 import com.example.ui.screens.*
-import com.example.ui.theme.AppTheme
-import com.example.ui.theme.MomentoBackground
-import com.example.ui.theme.MomentoPrimary
-import com.example.ui.theme.MomentoSecondary
-import com.example.ui.theme.MomentoTertiary
+import com.example.ui.theme.*
 import com.example.viewmodel.MomentoViewModel
 
 class MainActivity : ComponentActivity() {
@@ -43,95 +30,91 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AppTheme {
-                MomentoApp()
-            }
+            AppTheme { MomentoApp() }
         }
     }
 }
+
+// Routes that show the bottom nav + top bar
+private val mainRoutes = setOf("home", "tasks", "habits", "events", "expenses")
 
 @Composable
 fun MomentoApp() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: "home"
-    
     val viewModel: MomentoViewModel = viewModel()
-    
-    var showTaskDialog by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-    var showGoalDialog by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-    var showEventDialog by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-    var showExpenseDialog by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-    var showFocusMode by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
 
-    if (showTaskDialog) com.example.ui.components.AddTaskDialog(onDismiss = { showTaskDialog = false }) { title, priority -> viewModel.addTask(title, priority) }
-    if (showGoalDialog) com.example.ui.components.AddGoalDialog(onDismiss = { showGoalDialog = false }) { title -> viewModel.addGoal(title, 0f) }
-    if (showEventDialog) com.example.ui.components.AddEventDialog(onDismiss = { showEventDialog = false }) { title, category -> viewModel.addEvent(title, System.currentTimeMillis(), category) }
-    if (showExpenseDialog) com.example.ui.components.AddExpenseDialog(onDismiss = { showExpenseDialog = false }) { title, amount, category -> viewModel.addExpense(title, amount, category) }
-    if (showFocusMode) com.example.ui.components.FocusModeDialog(onDismiss = { showFocusMode = false })
+    val profile by viewModel.userProfile.collectAsStateWithLifecycle()
+    val profileInitials = viewModel.getInitials(profile?.name ?: "Rohan")
+
+    val showChrome = currentRoute in mainRoutes
+
+    // Dialog state
+    var showFocusMode by remember { mutableStateOf(false) }
+
+    if (showFocusMode) FocusModeDialog(onDismiss = { showFocusMode = false })
+
+    fun navigate(route: String) {
+        navController.navigate(route) {
+            popUpTo(navController.graph.startDestinationId) { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
 
     Scaffold(
         bottomBar = {
-            BottomNavBar(currentRoute = currentRoute) { route ->
-                navController.navigate(route) {
-                    popUpTo(navController.graph.startDestinationId) { saveState = true }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    when (currentRoute) {
-                        "tasks" -> showTaskDialog = true
-                        "goals" -> showGoalDialog = true
-                        "calendar" -> showEventDialog = true
-                        "expenses" -> showExpenseDialog = true
-                        else -> showTaskDialog = true
-                    }
-                },
-                containerColor = Color.Transparent,
-                modifier = Modifier
-                    .background(
-                        brush = Brush.linearGradient(listOf(MomentoPrimary, MomentoSecondary)),
-                        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
-                    )
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Add", tint = Color.White)
+            if (showChrome) {
+                BottomNavBar(currentRoute = currentRoute) { route -> navigate(route) }
             }
         }
     ) { innerPadding ->
+        // Glowing ambient background
         Box(modifier = Modifier.fillMaxSize().background(MomentoBackground)) {
-            // Glowing Orbs effect
-            Box(modifier = Modifier
-                .fillMaxWidth(1.2f)
-                .fillMaxHeight(0.6f)
-                .align(Alignment.TopStart)
-                .offset(x = (-100).dp, y = (-100).dp)
-                .background(Brush.radialGradient(listOf(MomentoPrimary.copy(alpha = 0.25f), Color.Transparent), radius = 800f))
-            )
-            Box(modifier = Modifier
-                .fillMaxWidth(1.2f)
-                .fillMaxHeight(0.6f)
-                .align(Alignment.BottomEnd)
-                .offset(x = 100.dp, y = 100.dp)
-                .background(Brush.radialGradient(listOf(MomentoTertiary.copy(alpha = 0.2f), Color.Transparent), radius = 800f))
-            )
-            Box(modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .fillMaxHeight(0.5f)
-                .align(Alignment.CenterEnd)
-                .background(Brush.radialGradient(listOf(MomentoSecondary.copy(alpha = 0.15f), Color.Transparent), radius = 600f))
-            )
-            
-            Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-                NavHost(navController, startDestination = "home") {
-                    composable("home") { DashboardScreen(viewModel, onFocusModeClick = { showFocusMode = true }) }
-                    composable("tasks") { TasksScreen(viewModel) }
-                    composable("goals") { GoalsScreen(viewModel) }
-                    composable("calendar") { CalendarScreen(viewModel) }
+            Box(modifier = Modifier.fillMaxWidth(1.4f).fillMaxHeight(0.55f).align(Alignment.TopStart).offset(x = (-80).dp, y = (-80).dp).background(Brush.radialGradient(listOf(MomentoPrimary.copy(alpha = 0.18f), Color.Transparent), radius = 900f)))
+            Box(modifier = Modifier.fillMaxWidth(1.2f).fillMaxHeight(0.45f).align(Alignment.BottomEnd).offset(x = 80.dp, y = 80.dp).background(Brush.radialGradient(listOf(MomentoTertiary.copy(alpha = 0.12f), Color.Transparent), radius = 700f)))
+            Box(modifier = Modifier.fillMaxWidth(0.7f).fillMaxHeight(0.4f).align(Alignment.CenterEnd).background(Brush.radialGradient(listOf(MomentoSecondary.copy(alpha = 0.10f), Color.Transparent), radius = 500f)))
+
+            Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+                // Top bar for main screens
+                if (showChrome) {
+                    val screenTitle = when (currentRoute) {
+                        "home"     -> "Momento"
+                        "tasks"    -> "Tasks"
+                        "habits"   -> "Habits"
+                        "events"   -> "Events"
+                        "expenses" -> "Expenses"
+                        else       -> "Momento"
+                    }
+                    MomentoTopBar(
+                        title = screenTitle,
+                        profileInitials = profileInitials,
+                        onProfileClick = { navController.navigate("profile") },
+                        onSearchClick  = { navController.navigate("search") }
+                    )
+                }
+
+                NavHost(
+                    navController = navController,
+                    startDestination = "home",
+                    modifier = Modifier.weight(1f),
+                    enterTransition = { fadeIn(animationSpec = tween(220)) + slideInHorizontally(tween(220)) { 40 } },
+                    exitTransition  = { fadeOut(animationSpec = tween(180)) },
+                    popEnterTransition = { fadeIn(tween(220)) + slideInHorizontally(tween(220)) { -40 } },
+                    popExitTransition  = { fadeOut(tween(180)) + slideOutHorizontally(tween(220)) { 40 } }
+                ) {
+                    composable("home")     { DashboardScreen(viewModel, onFocusModeClick = { showFocusMode = true }, onNavigate = { navController.navigate(it) }) }
+                    composable("tasks")    { TasksScreen(viewModel) }
+                    composable("habits")   { HabitsScreen(viewModel) }
+                    composable("events")   { CalendarScreen(viewModel) }
                     composable("expenses") { ExpensesScreen(viewModel) }
+                    composable("goals")    { GoalsScreen(viewModel) }
+                    composable("notes")    { NotesScreen(viewModel) }
+                    composable("analytics"){ AnalyticsScreen(viewModel) }
+                    composable("search")   { SearchScreen(viewModel, onNavigate = { route -> navigate(route) }) }
+                    composable("profile")  { ProfileScreen(viewModel, onNavigateBack = { navController.popBackStack() }) }
+                    composable("settings") { SettingsScreen(viewModel, onNavigateBack = { navController.popBackStack() }) }
                 }
             }
         }
