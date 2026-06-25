@@ -23,3 +23,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-dontwarn org.slf4j.**  
+-keep class org.slf4j.** { *; } 
+-dontwarn io.ktor.**
+-keep class io.ktor.** { *; }
+-dontwarn io.github.jan.supabase.**
+-keep class io.github.jan.supabase.** { *; }
+-dontwarn java.time.**
