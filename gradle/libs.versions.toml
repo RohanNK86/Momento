@@ -39,6 +39,8 @@ robolectric = "4.16.1"
 roborazzi = "1.59.0"
 firebaseBom = "34.12.0"
 secretsGradlePlugin = "2.0.1"
+supabase = "3.0.0"
+ktor = "3.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -89,6 +91,10 @@ roborazzi-junit-rule = { group = "io.github.takahirom.roborazzi", name = "robora
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-ai = { group = "com.google.firebase", name = "firebase-ai" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+supabase-bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "supabase" }
+supabase-gotrue = { module = "io.github.jan-tennert.supabase:gotrue-kt" }
+supabase-postgrest = { module = "io.github.jan-tennert.supabase:postgrest-kt" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

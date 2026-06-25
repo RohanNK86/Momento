@@ -11,6 +11,12 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.text.SimpleDateFormat
 import java.util.*
+import io.github.jan.supabase.gotrue.auth
+import io.github.jan.supabase.gotrue.providers.builtin.Email
+import io.github.jan.supabase.gotrue.SessionStatus
+import io.github.jan.supabase.exceptions.SupabaseException
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.serialization.Serializable
 
 class MomentoViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -47,6 +53,81 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
     val userProfile: StateFlow<UserProfile?> = repository.userProfile.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), null
     )
+
+    // ── Auth State ────────────────────────────────────────────────────────────
+    val sessionStatus: StateFlow<SessionStatus> = SupabaseClient.client.auth.sessionStatus.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), SessionStatus.LoadingFromStorage
+    )
+
+    var authError by androidx.compose.runtime.mutableStateOf<String?>(null)
+        private set
+
+    fun clearAuthError() { authError = null }
+
+    fun signUp(email: String, password: String) = viewModelScope.launch {
+        try {
+            authError = null
+            SupabaseClient.client.auth.signUpWith(Email) {
+                this.email = email
+                this.password = password
+            }
+        } catch (e: Exception) {
+            authError = e.message ?: "Signup failed"
+        }
+    }
+
+    fun signIn(email: String, password: String) = viewModelScope.launch {
+        try {
+            authError = null
+            SupabaseClient.client.auth.signInWith(Email) {
+                this.email = email
+                this.password = password
+            }
+        } catch (e: Exception) {
+            authError = e.message ?: "Login failed"
+        }
+    }
+
+    fun signOut() = viewModelScope.launch {
+        try {
+            SupabaseClient.client.auth.signOut()
+        } catch (e: Exception) {
+            authError = e.message ?: "Signout failed"
+        }
+    }
+
+    // ── Test Database Connection ──────────────────────────────────────────────
+    @Serializable
+    data class DummyProfile(
+        val id: String, // UUID matches Auth user
+        val name: String,
+        val email: String,
+        val phone: String
+    )
+
+    fun testDatabaseConnection(onResult: (Boolean, String) -> Unit) = viewModelScope.launch {
+        try {
+            val user = SupabaseClient.client.auth.currentUserOrNull()
+            if (user == null) {
+                onResult(false, "You must be logged in first to test the database!")
+                return@launch
+            }
+
+            val dummyData = DummyProfile(
+                id = user.id,
+                name = "Test User Momento",
+                email = user.email ?: "test@test.com",
+                phone = "123-456-7890"
+            )
+
+            // Upsert will insert if it doesn't exist, update if it does.
+            SupabaseClient.client.postgrest["profiles"].upsert(dummyData)
+            
+            onResult(true, "Successfully saved profile to Supabase database!")
+        } catch (e: Exception) {
+            onResult(false, "Failed: ${e.message}")
+        }
+    }
 
     // ── Greeting ──────────────────────────────────────────────────────────────
     fun getGreeting(name: String): String {

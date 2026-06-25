@@ -64,6 +64,18 @@ fun MomentoApp() {
         }
     }
 
+    val sessionStatus by viewModel.sessionStatus.collectAsState()
+    
+    // Global redirect to login on sign out
+    LaunchedEffect(sessionStatus) {
+        if (sessionStatus is io.github.jan.supabase.gotrue.SessionStatus.NotAuthenticated && currentRoute != "splash" && currentRoute != "register") {
+            navController.navigate("login") {
+                popUpTo(0) { inclusive = true } // Clear entire backstack
+                launchSingleTop = true
+            }
+        }
+    }
+
     Scaffold(
         bottomBar = {
             if (showChrome) {
@@ -98,13 +110,34 @@ fun MomentoApp() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = "home",
+                    startDestination = "splash",
                     modifier = Modifier.weight(1f),
                     enterTransition = { fadeIn(animationSpec = tween(220)) + slideInHorizontally(tween(220)) { 40 } },
                     exitTransition  = { fadeOut(animationSpec = tween(180)) },
                     popEnterTransition = { fadeIn(tween(220)) + slideInHorizontally(tween(220)) { -40 } },
                     popExitTransition  = { fadeOut(tween(180)) + slideOutHorizontally(tween(220)) { 40 } }
                 ) {
+                    composable("splash") {
+                        SplashScreen(
+                            viewModel = viewModel,
+                            onNavigateToHome = { navigate("home") },
+                            onNavigateToLogin = { navigate("login") }
+                        )
+                    }
+                    composable("login") {
+                        LoginScreen(
+                            viewModel = viewModel,
+                            onNavigateToRegister = { navigate("register") },
+                            onNavigateToHome = { navigate("home") }
+                        )
+                    }
+                    composable("register") {
+                        RegisterScreen(
+                            viewModel = viewModel,
+                            onNavigateToLogin = { navigate("login") },
+                            onNavigateToHome = { navigate("home") }
+                        )
+                    }
                     composable("home")     { DashboardScreen(viewModel, onFocusModeClick = { showFocusMode = true }, onNavigate = { navController.navigate(it) }) }
                     composable("tasks")    { TasksScreen(viewModel) }
                     composable("habits")   { HabitsScreen(viewModel) }

@@ -19,6 +19,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import android.widget.Toast
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -32,11 +34,22 @@ import com.example.ui.theme.*
 import com.example.viewmodel.MomentoViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import io.github.jan.supabase.gotrue.SessionStatus
 
 @Composable
 fun ProfileScreen(viewModel: MomentoViewModel, onNavigateBack: () -> Unit) {
     val profile by viewModel.userProfile.collectAsStateWithLifecycle()
     var isEditing by remember { mutableStateOf(false) }
+    
+    val sessionStatus by viewModel.sessionStatus.collectAsState()
+    val context = LocalContext.current
+
+    // Redirect to login if signed out
+    LaunchedEffect(sessionStatus) {
+        if (sessionStatus is SessionStatus.NotAuthenticated) {
+            onNavigateBack() // This might just pop to main, but actually we should pop to login. Wait, MainActivity handles splash logic, but let's just let the user navigate, or better, MainActivity should handle global redirect. But since this is a simple setup, popping back stack is fine if we redirect correctly. Wait, just popping back to home which is protected is fine. But actually, let's just trigger it.
+        }
+    }
 
     // Editable state
     var name by remember(profile) { mutableStateOf(profile?.name ?: "Rohan") }
@@ -162,6 +175,36 @@ fun ProfileScreen(viewModel: MomentoViewModel, onNavigateBack: () -> Unit) {
                 ProfileCard("About Me") {
                     ProfileField("Bio", bio, Icons.Default.Info, isEditing) { bio = it }
                     ProfileField("Goals", goalsText, Icons.Default.EmojiEvents, isEditing) { goalsText = it }
+                }
+            }
+
+            item { Spacer(modifier = Modifier.height(24.dp)) }
+
+            item {
+                Button(
+                    onClick = { 
+                        viewModel.testDatabaseConnection { success, message ->
+                            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = MomentoPrimary),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Test Supabase DB Connection", color = Color.White, fontWeight = FontWeight.Bold)
+                }
+            }
+
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+
+            item {
+                Button(
+                    onClick = { viewModel.signOut() },
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Log Out", color = Color.White, fontWeight = FontWeight.Bold)
                 }
             }
 
