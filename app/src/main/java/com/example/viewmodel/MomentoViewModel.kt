@@ -97,6 +97,15 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    fun signInWithGoogle() = viewModelScope.launch {
+        try {
+            authError = null
+            SupabaseClient.client.auth.signInWith(io.github.jan.supabase.gotrue.providers.Google)
+        } catch (e: Exception) {
+            authError = e.message ?: "Google Sign-in failed"
+        }
+    }
+
     // ── Test Database Connection ──────────────────────────────────────────────
     @Serializable
     data class DummyProfile(
