@@ -52,7 +52,7 @@ fun ProfileScreen(viewModel: MomentoViewModel, onNavigateBack: () -> Unit) {
     }
 
     // Editable state
-    var name by remember(profile) { mutableStateOf(profile?.name ?: "Rohan") }
+    var name by remember(profile) { mutableStateOf(profile?.name ?: "Your Name") }
     var gender by remember(profile) { mutableStateOf(profile?.gender ?: "") }
     var occupation by remember(profile) { mutableStateOf(profile?.occupation ?: "") }
     var email by remember(profile) { mutableStateOf(profile?.email ?: "") }

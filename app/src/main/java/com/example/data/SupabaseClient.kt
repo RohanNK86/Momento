@@ -10,7 +10,10 @@ object SupabaseClient {
         supabaseUrl = BuildConfig.SUPABASE_URL,
         supabaseKey = BuildConfig.SUPABASE_ANON_KEY
     ) {
-        install(Auth)
+        install(Auth) {
+            scheme = "momento"
+            host = "login-callback"
+        }
         install(Postgrest)
     }
 }
