@@ -106,38 +106,21 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    // ── Test Database Connection ──────────────────────────────────────────────
     @Serializable
-    data class DummyProfile(
-        val id: String, // UUID matches Auth user
+    data class SupabaseProfile(
+        val id: String,
         val name: String,
+        val gender: String,
+        val dateOfBirth: Long?,
+        val occupation: String,
         val email: String,
-        val phone: String
+        val phone: String,
+        val weightKg: Float?,
+        val heightCm: Float?,
+        val bio: String,
+        val goalsText: String,
+        val avatarColor: String
     )
-
-    fun testDatabaseConnection(onResult: (Boolean, String) -> Unit) = viewModelScope.launch {
-        try {
-            val user = SupabaseClient.client.auth.currentUserOrNull()
-            if (user == null) {
-                onResult(false, "You must be logged in first to test the database!")
-                return@launch
-            }
-
-            val dummyData = DummyProfile(
-                id = user.id,
-                name = "Test User Momento",
-                email = user.email ?: "test@test.com",
-                phone = "123-456-7890"
-            )
-
-            // Upsert will insert if it doesn't exist, update if it does.
-            SupabaseClient.client.postgrest["profiles"].upsert(dummyData)
-            
-            onResult(true, "Successfully saved profile to Supabase database!")
-        } catch (e: Exception) {
-            onResult(false, "Failed: ${e.message}")
-        }
-    }
 
     // ── Greeting ──────────────────────────────────────────────────────────────
     fun getGreeting(name: String): String {
@@ -367,7 +350,32 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
 
     // ── Profile Operations ────────────────────────────────────────────────────
     fun saveProfile(profile: UserProfile) = viewModelScope.launch {
+        // Save locally
         repository.saveProfile(profile)
+        
+        // Save to Supabase
+        try {
+            val user = SupabaseClient.client.auth.currentUserOrNull()
+            if (user != null) {
+                val supabaseProfile = SupabaseProfile(
+                    id = user.id,
+                    name = profile.name,
+                    gender = profile.gender,
+                    dateOfBirth = profile.dateOfBirth,
+                    occupation = profile.occupation,
+                    email = profile.email,
+                    phone = profile.phone,
+                    weightKg = profile.weightKg,
+                    heightCm = profile.heightCm,
+                    bio = profile.bio,
+                    goalsText = profile.goalsText,
+                    avatarColor = profile.avatarColor
+                )
+                SupabaseClient.client.postgrest["profiles"].upsert(supabaseProfile)
+            }
+        } catch (e: Exception) {
+            // Silently fail if offline or error
+        }
     }
 
     fun getInitials(name: String): String {

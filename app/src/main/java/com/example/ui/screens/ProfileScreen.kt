@@ -180,22 +180,7 @@ fun ProfileScreen(viewModel: MomentoViewModel, onNavigateBack: () -> Unit) {
 
             item { Spacer(modifier = Modifier.height(24.dp)) }
 
-            item {
-                Button(
-                    onClick = { 
-                        viewModel.testDatabaseConnection { success, message ->
-                            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth().height(50.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = MomentoPrimary),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text("Test Supabase DB Connection", color = Color.White, fontWeight = FontWeight.Bold)
-                }
-            }
 
-            item { Spacer(modifier = Modifier.height(16.dp)) }
 
             item {
                 Button(
