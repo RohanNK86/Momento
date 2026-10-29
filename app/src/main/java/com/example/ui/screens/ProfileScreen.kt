@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import android.widget.Toast
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -56,7 +55,6 @@ fun ProfileScreen(viewModel: MomentoViewModel, onNavigateBack: () -> Unit) {
     var showDobPicker by remember { mutableStateOf(false) }
 
     val initials = viewModel.getInitials(name)
-    val avatarColor = try { Color(android.graphics.Color.parseColor(profile?.avatarColor ?: "#6366F1")) } catch (e: Exception) { MomentoPrimary }
 
     // Age calc
     val age = dobMillis?.let {
@@ -81,7 +79,7 @@ fun ProfileScreen(viewModel: MomentoViewModel, onNavigateBack: () -> Unit) {
                 if (isEditing) {
                     viewModel.saveProfile(
                         UserProfile(
-                            name = name.ifBlank { "Rohan" },
+                            name = name.ifBlank { "You" },
                             gender = gender, occupation = occupation, email = email,
                             phone = phone, bio = bio, goalsText = goalsText,
                             weightKg = weightStr.toFloatOrNull(),
@@ -107,10 +105,10 @@ fun ProfileScreen(viewModel: MomentoViewModel, onNavigateBack: () -> Unit) {
                     Box(
                         modifier = Modifier.size(100.dp)
                             .clip(CircleShape)
-                            .background(Brush.linearGradient(listOf(avatarColor, MomentoSecondary))),
+                            .background(MomentoPrimaryContainer),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(initials, color = Color.White, fontSize = 36.sp, fontWeight = FontWeight.Bold)
+                        Text(initials, color = MomentoOnPrimaryContainer, fontSize = 36.sp, fontWeight = FontWeight.Bold)
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(name, style = MaterialTheme.typography.headlineSmall, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
@@ -216,8 +214,8 @@ private fun ProfileCard(title: String, content: @Composable ColumnScope.() -> Un
     Column(
         modifier = Modifier.fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
-            .background(Color.White.copy(alpha = 0.05f))
-            .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(20.dp))
+            .background(MomentoSurfaceContainer)
+            .border(1.dp, MomentoOutline, RoundedCornerShape(20.dp))
             .padding(16.dp)
     ) {
         Text(title, color = MomentoPrimary, fontSize = 12.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp)
@@ -236,7 +234,7 @@ private fun ProfileField(label: String, value: String, icon: androidx.compose.ui
         } else {
             Column(modifier = Modifier.weight(1f)) {
                 Text(label, color = MomentoOnSurfaceVariant, fontSize = 11.sp)
-                Text(value.ifBlank { "—" }, color = MomentoOnSurface, fontWeight = FontWeight.Medium)
+                Text(value.ifBlank { "â€”" }, color = MomentoOnSurface, fontWeight = FontWeight.Medium)
             }
         }
     }
@@ -252,7 +250,7 @@ private fun ProfileFieldNumeric(label: String, value: String, icon: androidx.com
         } else {
             Column(modifier = Modifier.weight(1f)) {
                 Text(label, color = MomentoOnSurfaceVariant, fontSize = 11.sp)
-                Text(value.ifBlank { "—" }, color = MomentoOnSurface, fontWeight = FontWeight.Medium)
+                Text(value.ifBlank { "â€”" }, color = MomentoOnSurface, fontWeight = FontWeight.Medium)
             }
         }
     }
@@ -261,11 +259,12 @@ private fun ProfileFieldNumeric(label: String, value: String, icon: androidx.com
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun momentoTextFieldColors() = TextFieldDefaults.colors(
-    focusedContainerColor = Color.White.copy(alpha = 0.05f),
-    unfocusedContainerColor = Color.White.copy(alpha = 0.03f),
-    focusedTextColor = Color(0xFFF1F5F9),
-    unfocusedTextColor = Color(0xFFF1F5F9),
-    focusedIndicatorColor = Color(0xFF6366F1),
-    unfocusedIndicatorColor = Color.White.copy(alpha = 0.15f),
-    cursorColor = Color(0xFF6366F1)
+    focusedContainerColor = MomentoSurfaceContainer,
+    unfocusedContainerColor = MomentoSurfaceContainer,
+    focusedTextColor = MomentoOnSurface,
+    unfocusedTextColor = MomentoOnSurface,
+    focusedIndicatorColor = MomentoPrimary,
+    unfocusedIndicatorColor = MomentoSurfaceContainer,
+    cursorColor = MomentoPrimary
 )
+

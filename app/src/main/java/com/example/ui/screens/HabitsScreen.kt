@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.data.Habit
 import com.example.ui.components.AddHabitDialog
+import com.example.ui.components.AddActionButton
 import com.example.ui.components.GlassCard
 import com.example.ui.theme.*
 import com.example.viewmodel.MomentoViewModel
@@ -63,21 +64,10 @@ fun HabitsScreen(viewModel: MomentoViewModel) {
         // Header
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Column {
-                Text("Habits", style = MaterialTheme.typography.displaySmall, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
+                Text("Habits", style = MaterialTheme.typography.headlineMedium, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
                 Text("Build routines, one day at a time.", style = MaterialTheme.typography.bodySmall, color = MomentoOnSurfaceVariant)
             }
-            FloatingActionButton(
-                onClick = { showAddDialog = true },
-                modifier = Modifier.size(48.dp),
-                containerColor = Color.Transparent,
-                shape = RoundedCornerShape(14.dp)
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxSize()
-                        .background(androidx.compose.ui.graphics.Brush.linearGradient(listOf(MomentoPrimary, MomentoSecondary)), RoundedCornerShape(14.dp)),
-                    contentAlignment = Alignment.Center
-                ) { Icon(Icons.Default.Add, null, tint = Color.White) }
-            }
+            AddActionButton(onClick = { showAddDialog = true }, description = "Add habit")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -94,7 +84,7 @@ fun HabitsScreen(viewModel: MomentoViewModel) {
                         progress = { if (habits.isEmpty()) 0f else completedCount.toFloat() / habits.size },
                         modifier = Modifier.width(180.dp).height(6.dp).clip(RoundedCornerShape(3.dp)),
                         color = MomentoTertiary,
-                        trackColor = Color.White.copy(alpha = 0.08f)
+                        trackColor = MomentoSurfaceContainer
                     )
                 }
                 Box(contentAlignment = Alignment.Center, modifier = Modifier.size(64.dp)) {
@@ -106,7 +96,7 @@ fun HabitsScreen(viewModel: MomentoViewModel) {
                         progress = { animProgress },
                         modifier = Modifier.fillMaxSize(),
                         color = MomentoTertiary,
-                        trackColor = Color.White.copy(alpha = 0.06f),
+                        trackColor = MomentoSurfaceContainer,
                         strokeWidth = 6.dp
                     )
                     Text("${(animProgress * 100).toInt()}%", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = MomentoOnSurface)
@@ -146,7 +136,7 @@ fun HabitCard(habit: Habit, viewModel: MomentoViewModel, onDelete: () -> Unit) {
 
     var expanded by remember { mutableStateOf(false) }
     val animBorder by animateColorAsState(
-        targetValue = if (done) habitColor.copy(alpha = 0.5f) else Color.White.copy(alpha = 0.08f),
+        targetValue = if (done) habitColor.copy(alpha = 0.5f) else MomentoSurfaceContainer,
         animationSpec = tween(400), label = "habitBorder"
     )
 
@@ -154,7 +144,7 @@ fun HabitCard(habit: Habit, viewModel: MomentoViewModel, onDelete: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
-            .background(if (done) habitColor.copy(alpha = 0.08f) else Color.White.copy(alpha = 0.04f))
+            .background(if (done) habitColor.copy(alpha = 0.08f) else MomentoSurfaceContainer)
             .border(1.dp, animBorder, RoundedCornerShape(20.dp))
             .clickable { expanded = !expanded }
             .padding(16.dp)
@@ -164,8 +154,8 @@ fun HabitCard(habit: Habit, viewModel: MomentoViewModel, onDelete: () -> Unit) {
             Box(
                 modifier = Modifier.size(44.dp)
                     .clip(CircleShape)
-                    .background(if (done) habitColor.copy(alpha = 0.2f) else Color.White.copy(alpha = 0.06f))
-                    .border(2.dp, if (done) habitColor else Color.White.copy(alpha = 0.15f), CircleShape)
+                    .background(if (done) habitColor.copy(alpha = 0.2f) else MomentoSurfaceContainer)
+                    .border(2.dp, if (done) habitColor else MomentoSurfaceContainer, CircleShape)
                     .clickable { viewModel.toggleHabitForToday(habit) },
                 contentAlignment = Alignment.Center
             ) {
@@ -178,8 +168,8 @@ fun HabitCard(habit: Habit, viewModel: MomentoViewModel, onDelete: () -> Unit) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(habit.name, color = MomentoOnSurface, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("🔥 ${habit.currentStreak} day streak", color = MomentoOnSurfaceVariant, fontSize = 12.sp)
-                    Text("• ${habit.frequency}", color = habitColor, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                    Text("ðŸ”¥ ${habit.currentStreak} day streak", color = MomentoOnSurfaceVariant, fontSize = 12.sp)
+                    Text("â€¢ ${habit.frequency}", color = habitColor, fontSize = 12.sp, fontWeight = FontWeight.Medium)
                 }
             }
             Column(horizontalAlignment = Alignment.End) {
@@ -199,7 +189,7 @@ fun HabitCard(habit: Habit, viewModel: MomentoViewModel, onDelete: () -> Unit) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
                     Box(
                         modifier = Modifier.size(28.dp).clip(RoundedCornerShape(6.dp))
-                            .background(if (completed) habitColor.copy(alpha = 0.7f) else Color.White.copy(alpha = 0.06f))
+                            .background(if (completed) habitColor.copy(alpha = 0.7f) else MomentoSurfaceContainer)
                     )
                     Spacer(modifier = Modifier.height(3.dp))
                     Text(days[i], color = MomentoOnSurfaceVariant, fontSize = 9.sp)
@@ -211,10 +201,11 @@ fun HabitCard(habit: Habit, viewModel: MomentoViewModel, onDelete: () -> Unit) {
         AnimatedVisibility(visible = expanded && habit.description.isNotBlank()) {
             Column {
                 Spacer(modifier = Modifier.height(8.dp))
-                HorizontalDivider(color = Color.White.copy(alpha = 0.06f))
+                HorizontalDivider(color = MomentoSurfaceContainer)
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(habit.description, color = MomentoOnSurfaceVariant, fontSize = 13.sp)
             }
         }
     }
 }
+

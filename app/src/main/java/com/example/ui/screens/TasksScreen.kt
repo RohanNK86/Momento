@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.data.Task
 import com.example.ui.components.AddTaskDialog
+import com.example.ui.components.AddActionButton
 import com.example.ui.components.GlassCard
 import com.example.ui.theme.*
 import com.example.viewmodel.MomentoViewModel
@@ -38,11 +39,33 @@ fun TasksScreen(viewModel: MomentoViewModel) {
     var selectedTab by remember { mutableStateOf("All") }
     var showAddDialog by remember { mutableStateOf(false) }
     var deleteTarget by remember { mutableStateOf<Task?>(null) }
+    var editTarget by remember { mutableStateOf<Task?>(null) }
 
     if (showAddDialog) {
-        AddTaskDialog(onDismiss = { showAddDialog = false }) { title, priority ->
-            viewModel.addTask(title, priority)
+        AddTaskDialog(onDismiss = { showAddDialog = false }) { title, priority, description, category, dueDate ->
+            viewModel.addTask(title, priority, description, category, dueDate)
         }
+    }
+    editTarget?.let { task ->
+        var title by remember(task.id) { mutableStateOf(task.title) }
+        var priority by remember(task.id) { mutableStateOf(task.priority) }
+        AlertDialog(
+            onDismissRequest = { editTarget = null },
+            title = { Text("Edit task", color = MomentoOnSurface) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    OutlinedTextField(value = title, onValueChange = { title = it }, label = { Text("Task title") }, singleLine = true, colors = momentoTextFieldColors())
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Task.Priority.entries.forEach { option ->
+                            FilterChip(selected = priority == option, onClick = { priority = option }, label = { Text(option.name) })
+                        }
+                    }
+                }
+            },
+            confirmButton = { TextButton(onClick = { if (title.isNotBlank()) viewModel.updateTask(task.copy(title = title.trim(), priority = priority)); editTarget = null }) { Text("Save") } },
+            dismissButton = { TextButton(onClick = { editTarget = null }) { Text("Cancel") } },
+            containerColor = MomentoSurfaceContainerHigh
+        )
     }
     deleteTarget?.let { task ->
         AlertDialog(
@@ -71,14 +94,10 @@ fun TasksScreen(viewModel: MomentoViewModel) {
         Spacer(modifier = Modifier.height(8.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Column {
-                Text("Tasks", style = MaterialTheme.typography.displaySmall, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
+                Text("Tasks", style = MaterialTheme.typography.headlineMedium, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
                 Text("${tasks.count { it.isCompleted }}/${tasks.size} completed", color = MomentoOnSurfaceVariant, fontSize = 13.sp)
             }
-            FloatingActionButton(onClick = { showAddDialog = true }, modifier = Modifier.size(48.dp), containerColor = Color.Transparent, shape = RoundedCornerShape(14.dp)) {
-                Box(modifier = Modifier.fillMaxSize().background(androidx.compose.ui.graphics.Brush.linearGradient(listOf(MomentoPrimary, MomentoSecondary)), RoundedCornerShape(14.dp)), contentAlignment = Alignment.Center) {
-                    Icon(Icons.Default.Add, null, tint = Color.White)
-                }
-            }
+            AddActionButton(onClick = { showAddDialog = true }, description = "Add task")
         }
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -91,7 +110,7 @@ fun TasksScreen(viewModel: MomentoViewModel) {
                     LinearProgressIndicator(
                         progress = { animComp },
                         modifier = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp)),
-                        color = MomentoPrimary, trackColor = Color.White.copy(alpha = 0.06f)
+                        color = MomentoPrimary, trackColor = MomentoSurfaceContainer
                     )
                 }
                 Spacer(modifier = Modifier.width(16.dp))
@@ -104,7 +123,7 @@ fun TasksScreen(viewModel: MomentoViewModel) {
         OutlinedTextField(
             value = searchQuery, onValueChange = { searchQuery = it },
             modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)),
-            placeholder = { Text("Search tasks…", color = MomentoOnSurfaceVariant) },
+            placeholder = { Text("Search tasksâ€¦", color = MomentoOnSurfaceVariant) },
             leadingIcon = { Icon(Icons.Default.Search, null, tint = MomentoOnSurfaceVariant) },
             trailingIcon = { if (searchQuery.isNotEmpty()) IconButton(onClick = { searchQuery = "" }) { Icon(Icons.Default.Clear, null, tint = MomentoOnSurfaceVariant) } },
             colors = momentoTextFieldColors(), shape = RoundedCornerShape(12.dp), singleLine = true
@@ -117,11 +136,11 @@ fun TasksScreen(viewModel: MomentoViewModel) {
                 val sel = selectedTab == tab
                 Box(
                     modifier = Modifier.clip(RoundedCornerShape(20.dp))
-                        .background(if (sel) MomentoPrimary else Color.White.copy(alpha = 0.05f))
-                        .border(1.dp, if (sel) MomentoPrimary else Color.White.copy(alpha = 0.08f), RoundedCornerShape(20.dp))
+                        .background(if (sel) MomentoPrimary else MomentoSurfaceContainer)
+                        .border(1.dp, if (sel) MomentoPrimary else MomentoSurfaceContainer, RoundedCornerShape(20.dp))
                         .clickable { selectedTab = tab }
                         .padding(horizontal = 14.dp, vertical = 7.dp)
-                ) { Text(tab, color = if (sel) Color.White else MomentoOnSurfaceVariant, fontSize = 12.sp, fontWeight = if (sel) FontWeight.Bold else FontWeight.Normal) }
+                ) { Text(tab, color = if (sel) MaterialTheme.colorScheme.onPrimary else MomentoOnSurfaceVariant, fontSize = 12.sp, fontWeight = if (sel) FontWeight.Bold else FontWeight.Normal) }
             }
         }
         Spacer(modifier = Modifier.height(10.dp))
@@ -137,7 +156,7 @@ fun TasksScreen(viewModel: MomentoViewModel) {
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.weight(1f)) {
                 items(filtered, key = { it.id }) { task ->
-                    TaskItemCard(task = task, onToggle = { viewModel.toggleTaskCompletion(task) }, onDelete = { deleteTarget = task }, onArchive = { viewModel.archiveTask(task) })
+                    TaskItemCard(task = task, onToggle = { viewModel.toggleTaskCompletion(task) }, onEdit = { editTarget = task }, onDelete = { deleteTarget = task }, onArchive = { viewModel.archiveTask(task) })
                 }
                 item { Spacer(modifier = Modifier.height(80.dp)) }
             }
@@ -146,7 +165,7 @@ fun TasksScreen(viewModel: MomentoViewModel) {
 }
 
 @Composable
-fun TaskItemCard(task: Task, onToggle: () -> Unit, onDelete: () -> Unit, onArchive: () -> Unit) {
+fun TaskItemCard(task: Task, onToggle: () -> Unit, onEdit: () -> Unit, onDelete: () -> Unit, onArchive: () -> Unit) {
     val priorityColor = when (task.priority) { Task.Priority.HIGH -> MomentoError; Task.Priority.MEDIUM -> MomentoTertiary; Task.Priority.LOW -> MomentoOnSurfaceVariant }
     var showMenu by remember { mutableStateOf(false) }
     val dueFmt = SimpleDateFormat("MMM d", Locale.getDefault())
@@ -154,8 +173,8 @@ fun TaskItemCard(task: Task, onToggle: () -> Unit, onDelete: () -> Unit, onArchi
     Row(
         modifier = Modifier.fillMaxWidth()
             .clip(RoundedCornerShape(14.dp))
-            .background(Color.White.copy(alpha = if (task.isCompleted) 0.02f else 0.05f))
-            .border(1.dp, if (task.isCompleted) Color.White.copy(alpha = 0.04f) else priorityColor.copy(alpha = 0.2f), RoundedCornerShape(14.dp))
+            .background(if (task.isCompleted) MomentoSurfaceContainer else MomentoSurfaceBase)
+            .border(1.dp, if (task.isCompleted) MomentoOutline else priorityColor.copy(alpha = 0.2f), RoundedCornerShape(14.dp))
             .padding(14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -191,6 +210,7 @@ fun TaskItemCard(task: Task, onToggle: () -> Unit, onDelete: () -> Unit, onArchi
                 Icon(Icons.Default.MoreVert, null, tint = MomentoOnSurfaceVariant, modifier = Modifier.size(16.dp))
             }
             DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }, modifier = Modifier.background(MomentoSurfaceContainerHigh)) {
+                DropdownMenuItem(text = { Text("Edit", color = MomentoOnSurface) }, onClick = { onEdit(); showMenu = false }, leadingIcon = { Icon(Icons.Default.Edit, null, tint = MomentoPrimary) })
                 DropdownMenuItem(text = { Text(if (task.isCompleted) "Mark Pending" else "Mark Done", color = MomentoOnSurface) }, onClick = { onToggle(); showMenu = false }, leadingIcon = { Icon(Icons.Default.TaskAlt, null, tint = MomentoTertiary) })
                 DropdownMenuItem(text = { Text("Archive", color = MomentoOnSurface) }, onClick = { onArchive(); showMenu = false }, leadingIcon = { Icon(Icons.Default.Archive, null, tint = MomentoOnSurface) })
                 DropdownMenuItem(text = { Text("Delete", color = MomentoError) }, onClick = { onDelete(); showMenu = false }, leadingIcon = { Icon(Icons.Default.Delete, null, tint = MomentoError) })
@@ -198,3 +218,4 @@ fun TaskItemCard(task: Task, onToggle: () -> Unit, onDelete: () -> Unit, onArchi
         }
     }
 }
+

@@ -30,7 +30,7 @@ data class Goal(
     val title: String,
     val description: String = "",
     val targetDateMillis: Long = System.currentTimeMillis() + 2592000000L,
-    val progress: Float = 0f,          // 0.0 – 1.0 (derived from currentValue/targetValue)
+    val progress: Float = 0f,          // 0.0 â€“ 1.0 (derived from currentValue/targetValue)
     val currentValue: Float = 0f,
     val targetValue: Float = 100f,
     val milestones: String = "[]",     // JSON array of milestone strings
@@ -98,7 +98,7 @@ data class Note(
 @Entity(tableName = "user_profile")
 data class UserProfile(
     @PrimaryKey val id: Int = 1,
-    val name: String = "Rohan",
+    val name: String = "You",
     val gender: String = "",
     val dateOfBirth: Long? = null,
     val occupation: String = "",
@@ -110,3 +110,4 @@ data class UserProfile(
     val goalsText: String = "",
     val avatarColor: String = "#6366F1"
 )
+

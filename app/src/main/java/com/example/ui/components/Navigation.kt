@@ -15,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -37,20 +36,15 @@ val bottomNavItems = listOf(
 fun BottomNavBar(currentRoute: String, onNavigate: (String) -> Unit) {
     Box(
         modifier = Modifier.fillMaxWidth()
-            .background(
-                Brush.verticalGradient(
-                    listOf(Color.Transparent, MomentoBackground.copy(alpha = 0.95f)),
-                    startY = 0f, endY = Float.POSITIVE_INFINITY
-                )
-            )
+            .background(MomentoBackground)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 8.dp)
                 .clip(RoundedCornerShape(24.dp))
-                .background(Color.White.copy(alpha = 0.06f))
-                .border(1.dp, Color.White.copy(alpha = 0.1f), RoundedCornerShape(24.dp))
+                .background(MomentoSurfaceBase)
+                .border(1.dp, MomentoOutline, RoundedCornerShape(24.dp))
                 .padding(vertical = 6.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
@@ -67,12 +61,12 @@ fun BottomNavBar(currentRoute: String, onNavigate: (String) -> Unit) {
 @Composable
 private fun BottomNavItem(item: NavItem, isSelected: Boolean, onClick: () -> Unit) {
     val color by animateColorAsState(
-        targetValue = if (isSelected) MomentoPrimary else Color.Gray,
+        targetValue = if (isSelected) MomentoPrimary else MomentoOnSurfaceVariant,
         animationSpec = tween(200), label = "navColor"
     )
     val scale by animateFloatAsState(
-        targetValue = if (isSelected) 1.1f else 1f,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy), label = "navScale"
+        targetValue = if (isSelected) 1.04f else 1f,
+        animationSpec = tween(180), label = "navScale"
     )
 
     Box(
@@ -85,7 +79,7 @@ private fun BottomNavItem(item: NavItem, isSelected: Boolean, onClick: () -> Uni
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Box(contentAlignment = Alignment.Center) {
                 if (isSelected) {
-                    Box(modifier = Modifier.size(40.dp).clip(RoundedCornerShape(14.dp)).background(MomentoPrimary.copy(alpha = 0.15f)))
+                    Box(modifier = Modifier.size(40.dp).clip(RoundedCornerShape(14.dp)).background(MomentoPrimaryContainer))
                 }
                 Icon(
                     item.icon, contentDescription = item.label, tint = color,
@@ -105,11 +99,11 @@ fun ProfileAvatarButton(initials: String, onClick: () -> Unit) {
         modifier = Modifier
             .size(40.dp)
             .clip(CircleShape)
-            .background(Brush.linearGradient(listOf(MomentoPrimary, MomentoSecondary)))
+            .background(MomentoPrimaryContainer)
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
-        Text(initials.take(2), color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+        Text(initials.take(2), color = MomentoOnPrimaryContainer, fontSize = 14.sp, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -128,3 +122,4 @@ fun MomentoTopBar(title: String, profileInitials: String, onProfileClick: () -> 
         ProfileAvatarButton(initials = profileInitials, onClick = onProfileClick)
     }
 }
+

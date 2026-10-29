@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.data.Note
 import com.example.ui.components.AddNoteDialog
+import com.example.ui.components.AddActionButton
 import com.example.ui.theme.*
 import com.example.viewmodel.MomentoViewModel
 import java.text.SimpleDateFormat
@@ -61,24 +62,17 @@ fun NotesScreen(viewModel: MomentoViewModel) {
         Spacer(modifier = Modifier.height(8.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Column {
-                Text("Notes", style = MaterialTheme.typography.displaySmall, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
+                Text("Notes", style = MaterialTheme.typography.headlineMedium, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
                 Text("${notes.size} notes saved", color = MomentoOnSurfaceVariant, fontSize = 13.sp)
             }
-            FloatingActionButton(
-                onClick = { showAddDialog = true }, modifier = Modifier.size(48.dp),
-                containerColor = Color.Transparent, shape = RoundedCornerShape(14.dp)
-            ) {
-                Box(modifier = Modifier.fillMaxSize().background(androidx.compose.ui.graphics.Brush.linearGradient(listOf(MomentoSecondary, MomentoPrimary)), RoundedCornerShape(14.dp)), contentAlignment = Alignment.Center) {
-                    Icon(Icons.Default.Add, null, tint = Color.White)
-                }
-            }
+            AddActionButton(onClick = { showAddDialog = true }, description = "Add note")
         }
         Spacer(modifier = Modifier.height(12.dp))
         // Search bar
         OutlinedTextField(
             value = searchQuery, onValueChange = { searchQuery = it },
             modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)),
-            placeholder = { Text("Search notes…", color = MomentoOnSurfaceVariant) },
+            placeholder = { Text("Search notesâ€¦", color = MomentoOnSurfaceVariant) },
             leadingIcon = { Icon(Icons.Default.Search, null, tint = MomentoOnSurfaceVariant) },
             trailingIcon = { if (searchQuery.isNotEmpty()) IconButton(onClick = { searchQuery = "" }) { Icon(Icons.Default.Clear, null, tint = MomentoOnSurfaceVariant) } },
             colors = momentoTextFieldColors(), shape = RoundedCornerShape(12.dp), singleLine = true
@@ -131,8 +125,8 @@ fun NoteCard(note: Note, viewModel: MomentoViewModel, onEdit: () -> Unit) {
     Box(
         modifier = Modifier.fillMaxWidth()
             .clip(RoundedCornerShape(18.dp))
-            .background(Color.White.copy(alpha = 0.05f))
-            .border(1.dp, if (note.isPinned) MomentoTertiary.copy(alpha = 0.3f) else Color.White.copy(alpha = 0.07f), RoundedCornerShape(18.dp))
+            .background(MomentoSurfaceContainer)
+            .border(1.dp, if (note.isPinned) MomentoTertiary.copy(alpha = 0.3f) else MomentoSurfaceContainer, RoundedCornerShape(18.dp))
             .clickable(onClick = onEdit)
             .padding(16.dp)
     ) {
@@ -171,3 +165,4 @@ fun NoteCard(note: Note, viewModel: MomentoViewModel, onEdit: () -> Unit) {
         }
     }
 }
+

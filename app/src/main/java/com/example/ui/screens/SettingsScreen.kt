@@ -18,20 +18,25 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.collectAsState
 import com.example.ui.theme.*
 import com.example.viewmodel.MomentoViewModel
 
 @Composable
 fun SettingsScreen(viewModel: MomentoViewModel, onNavigateBack: () -> Unit) {
     var showClearDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val storedDark by ThemeModeStore.dark.collectAsState()
+    val darkTheme = storedDark ?: context.getSharedPreferences("momento_preferences", android.content.Context.MODE_PRIVATE).getBoolean("dark_theme", false)
 
     if (showClearDialog) {
         AlertDialog(
             onDismissRequest = { showClearDialog = false },
             title = { Text("Clear All Data", color = MomentoOnSurface) },
             text = { Text("This will permanently delete all tasks, goals, habits, events, expenses, and notes. This cannot be undone.", color = MomentoOnSurfaceVariant) },
-            confirmButton = { TextButton(onClick = { showClearDialog = false }) { Text("Cancel", color = MomentoOnSurfaceVariant) } },
-            dismissButton = { TextButton(onClick = { showClearDialog = false }) { Text("Delete All", color = MomentoError) } },
+            confirmButton = { TextButton(onClick = { viewModel.clearAllData(); showClearDialog = false }) { Text("Delete All", color = MomentoError) } },
+            dismissButton = { TextButton(onClick = { showClearDialog = false }) { Text("Cancel", color = MomentoOnSurfaceVariant) } },
             containerColor = MomentoSurfaceContainerHigh
         )
     }
@@ -46,8 +51,18 @@ fun SettingsScreen(viewModel: MomentoViewModel, onNavigateBack: () -> Unit) {
         LazyColumn(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             item {
                 SettingsSection("Appearance") {
-                    SettingsInfoRow(Icons.Default.DarkMode, "Theme", "Dark (Default)", MomentoPrimary)
-                    SettingsInfoRow(Icons.Default.Palette, "Accent Color", "Indigo / Purple", MomentoSecondary)
+                    Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Box(modifier = Modifier.size(36.dp).clip(RoundedCornerShape(10.dp)).background(MomentoPrimary.copy(alpha = 0.12f)), contentAlignment = Alignment.Center) {
+                            Icon(if (darkTheme) Icons.Default.DarkMode else Icons.Default.LightMode, null, tint = MomentoPrimary, modifier = Modifier.size(18.dp))
+                        }
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Appearance", color = MomentoOnSurface, fontWeight = FontWeight.Medium)
+                            Text(if (darkTheme) "Dark theme" else "Light theme", color = MomentoOnSurfaceVariant, fontSize = 12.sp)
+                        }
+                        Switch(checked = darkTheme, onCheckedChange = { ThemeModeStore.setDark(context, it) })
+                    }
+                    SettingsInfoRow(Icons.Default.Palette, "Accent Color", "Violet", MomentoSecondary)
                 }
             }
             item {
@@ -59,9 +74,8 @@ fun SettingsScreen(viewModel: MomentoViewModel, onNavigateBack: () -> Unit) {
             }
             item {
                 SettingsSection("Data") {
-                    SettingsActionRow(Icons.Default.Backup, "Backup Data", "Export to local storage", MomentoPrimary) {}
-                    SettingsActionRow(Icons.Default.Restore, "Restore Data", "Import from backup", MomentoPrimary) {}
-                    SettingsActionRow(Icons.Default.TableChart, "Export to CSV", "Export all data", MomentoTertiary) {}
+                    SettingsInfoRow(Icons.Default.Storage, "Storage", "Saved on this device", MomentoTertiary)
+                    SettingsInfoRow(Icons.Default.CloudOff, "Account", "Not required", MomentoOnSurfaceVariant)
                 }
             }
             item {
@@ -88,8 +102,8 @@ private fun SettingsSection(title: String, content: @Composable ColumnScope.() -
         Spacer(modifier = Modifier.height(8.dp))
         Column(
             modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp))
-                .background(Color.White.copy(alpha = 0.04f))
-                .border(1.dp, Color.White.copy(alpha = 0.07f), RoundedCornerShape(18.dp))
+                .background(MomentoSurfaceContainer)
+                .border(1.dp, MomentoOutline, RoundedCornerShape(18.dp))
         ) { content() }
     }
 }
@@ -120,3 +134,4 @@ private fun SettingsActionRow(icon: ImageVector, title: String, subtitle: String
         Icon(Icons.Default.ChevronRight, null, tint = MomentoOnSurfaceVariant, modifier = Modifier.size(18.dp))
     }
 }
+

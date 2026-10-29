@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.data.Goal
 import com.example.ui.components.AddGoalDialog
+import com.example.ui.components.AddActionButton
 import com.example.ui.components.GlassCard
 import com.example.ui.theme.*
 import com.example.viewmodel.MomentoViewModel
@@ -41,8 +42,8 @@ fun GoalsScreen(viewModel: MomentoViewModel) {
     var deleteTarget by remember { mutableStateOf<Goal?>(null) }
 
     if (showAddDialog) {
-        AddGoalDialog(onDismiss = { showAddDialog = false }) { title ->
-            viewModel.addGoal(title)
+        AddGoalDialog(onDismiss = { showAddDialog = false }) { title, description, targetDate ->
+            viewModel.addGoal(title, description, targetDate ?: (System.currentTimeMillis() + 2592000000L))
         }
     }
     progressTarget?.let { goal ->
@@ -52,7 +53,7 @@ fun GoalsScreen(viewModel: MomentoViewModel) {
             title = { Text("Update Progress", color = MomentoOnSurface) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("${goal.title} — ${newProgress.toInt()}%", color = MomentoOnSurfaceVariant)
+                    Text("${goal.title} â€” ${newProgress.toInt()}%", color = MomentoOnSurfaceVariant)
                     Slider(value = newProgress, onValueChange = { newProgress = it }, valueRange = 0f..goal.targetValue, colors = SliderDefaults.colors(thumbColor = MomentoTertiary, activeTrackColor = MomentoTertiary))
                 }
             },
@@ -79,14 +80,10 @@ fun GoalsScreen(viewModel: MomentoViewModel) {
         Spacer(modifier = Modifier.height(8.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Column {
-                Text("Goals", style = MaterialTheme.typography.displaySmall, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
+                Text("Goals", style = MaterialTheme.typography.headlineMedium, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
                 Text("${completed.size}/${goals.size} achieved", color = MomentoOnSurfaceVariant, fontSize = 13.sp)
             }
-            FloatingActionButton(onClick = { showAddDialog = true }, modifier = Modifier.size(48.dp), containerColor = Color.Transparent, shape = RoundedCornerShape(14.dp)) {
-                Box(modifier = Modifier.fillMaxSize().background(androidx.compose.ui.graphics.Brush.linearGradient(listOf(MomentoTertiary, MomentoPrimary)), RoundedCornerShape(14.dp)), contentAlignment = Alignment.Center) {
-                    Icon(Icons.Default.Add, null, tint = Color.White)
-                }
-            }
+            AddActionButton(onClick = { showAddDialog = true }, description = "Add goal")
         }
         Spacer(modifier = Modifier.height(16.dp))
         LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp), modifier = Modifier.weight(1f)) {
@@ -129,7 +126,7 @@ fun GoalCard(goal: Goal, onUpdateProgress: () -> Unit, onDelete: () -> Unit) {
     val daysLeft = ((goal.targetDateMillis - System.currentTimeMillis()) / 86400000L).toInt()
     val dateFmt = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
 
-    Box(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(22.dp)).background(Color.White.copy(alpha = 0.05f)).border(1.dp, statusColor.copy(alpha = 0.25f), RoundedCornerShape(22.dp)).padding(20.dp)) {
+    Box(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(22.dp)).background(MomentoSurfaceContainer).border(1.dp, statusColor.copy(alpha = 0.25f), RoundedCornerShape(22.dp)).padding(20.dp)) {
         Column {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Top) {
                 Column(modifier = Modifier.weight(1f)) {
@@ -187,8 +184,9 @@ fun AchievedGoalItem(goal: Goal, onDelete: () -> Unit) {
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(goal.title, color = MomentoOnSurface, fontWeight = FontWeight.SemiBold)
-            Text("100% Complete 🎉", color = MomentoTertiary, fontSize = 12.sp)
+            Text("100% Complete ðŸŽ‰", color = MomentoTertiary, fontSize = 12.sp)
         }
         IconButton(onClick = onDelete, modifier = Modifier.size(28.dp)) { Icon(Icons.Default.Delete, null, tint = MomentoOnSurfaceVariant, modifier = Modifier.size(14.dp)) }
     }
 }
+

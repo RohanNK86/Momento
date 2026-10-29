@@ -8,10 +8,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.ui.theme.MomentoOutline
+import com.example.ui.theme.MomentoSurfaceBase
 
 @Composable
 fun GlassCard(
@@ -24,11 +25,13 @@ fun GlassCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .shadow(3.dp, RoundedCornerShape(cornerRadius))
             .clip(RoundedCornerShape(cornerRadius))
-            .background(Color.White.copy(alpha = alpha))
-            .border(1.dp, Color.White.copy(alpha = borderAlpha), RoundedCornerShape(cornerRadius))
+            .background(MomentoSurfaceBase.copy(alpha = 0.9f))
+            .border(1.dp, MomentoOutline.copy(alpha = 0.8f), RoundedCornerShape(cornerRadius))
             .animateContentSize()
             .padding(16.dp),
         content = content
     )
 }
+

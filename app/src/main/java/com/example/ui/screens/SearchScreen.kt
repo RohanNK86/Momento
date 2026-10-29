@@ -46,14 +46,14 @@ fun SearchScreen(viewModel: MomentoViewModel, onNavigate: (String) -> Unit) {
 
     Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
         Spacer(modifier = Modifier.height(8.dp))
-        Text("Search", style = MaterialTheme.typography.displaySmall, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
+        Text("Search", style = MaterialTheme.typography.headlineMedium, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
         Text("Find anything across Momento", color = MomentoOnSurfaceVariant, fontSize = 13.sp)
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = query, onValueChange = { query = it },
             modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)),
-            placeholder = { Text("Tasks, events, notes, goals…", color = MomentoOnSurfaceVariant) },
+            placeholder = { Text("Tasks, events, notes, goalsâ€¦", color = MomentoOnSurfaceVariant) },
             leadingIcon = { Icon(Icons.Default.Search, null, tint = MomentoPrimary) },
             trailingIcon = { if (query.isNotEmpty()) IconButton(onClick = { query = "" }) { Icon(Icons.Default.Clear, null, tint = MomentoOnSurfaceVariant) } },
             colors = momentoTextFieldColors(), shape = RoundedCornerShape(16.dp), singleLine = true
@@ -68,7 +68,7 @@ fun SearchScreen(viewModel: MomentoViewModel, onNavigate: (String) -> Unit) {
                         Icon(Icons.Default.Search, null, tint = MomentoOnSurfaceVariant, modifier = Modifier.size(56.dp))
                         Spacer(modifier = Modifier.height(12.dp))
                         Text("Type to search", color = MomentoOnSurfaceVariant, style = MaterialTheme.typography.bodyLarge)
-                        Text("Tasks · Events · Goals · Habits · Notes", color = MomentoOnSurfaceVariant, fontSize = 12.sp)
+                        Text("Tasks Â· Events Â· Goals Â· Habits Â· Notes", color = MomentoOnSurfaceVariant, fontSize = 12.sp)
                     }
                 }
             }
@@ -90,7 +90,7 @@ fun SearchScreen(viewModel: MomentoViewModel, onNavigate: (String) -> Unit) {
                         item { SearchSectionHeader("Tasks", Icons.Default.TaskAlt, MomentoPrimary, matchedTasks.size) }
                         items(matchedTasks.take(5)) { task ->
                             SearchResultCard(
-                                title = task.title, subtitle = "${task.priority.name} · ${task.category}",
+                                title = task.title, subtitle = "${task.priority.name} Â· ${task.category}",
                                 icon = Icons.Default.TaskAlt, color = MomentoPrimary,
                                 badge = if (task.isCompleted) "Done" else "Pending"
                             ) { onNavigate("tasks") }
@@ -120,7 +120,7 @@ fun SearchScreen(viewModel: MomentoViewModel, onNavigate: (String) -> Unit) {
                         items(matchedHabits.take(5)) { habit ->
                             val hc = try { Color(android.graphics.Color.parseColor(habit.color)) } catch (e: Exception) { MomentoPrimary }
                             SearchResultCard(
-                                title = habit.name, subtitle = "🔥 ${habit.currentStreak} day streak · ${habit.frequency}",
+                                title = habit.name, subtitle = "ðŸ”¥ ${habit.currentStreak} day streak Â· ${habit.frequency}",
                                 icon = Icons.Default.Loop, color = hc, badge = habit.frequency
                             ) { onNavigate("habits") }
                         }
@@ -158,8 +158,8 @@ private fun SearchResultCard(title: String, subtitle: String, icon: ImageVector,
     Row(
         modifier = Modifier.fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            .background(Color.White.copy(alpha = 0.04f))
-            .border(1.dp, Color.White.copy(alpha = 0.06f), RoundedCornerShape(12.dp))
+            .background(MomentoSurfaceContainer)
+            .border(1.dp, MomentoOutline, RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -179,3 +179,4 @@ private fun SearchResultCard(title: String, subtitle: String, icon: ImageVector,
         Icon(Icons.Default.ChevronRight, null, tint = MomentoOnSurfaceVariant, modifier = Modifier.size(16.dp))
     }
 }
+
