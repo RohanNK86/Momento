@@ -57,7 +57,7 @@ fun DashboardScreen(
         viewModel.addTask(title, priority, description, category, dueDate)
     }
     if (showAddGoal) AddGoalDialog(onDismiss = { showAddGoal = false }) { title, description, targetDate ->
-        viewModel.addGoal(title, description, targetDate ?: (System.currentTimeMillis() + 2592000000L))
+        viewModel.addGoal(title, description, targetDateMillis = targetDate ?: (System.currentTimeMillis() + 2592000000L))
     }
     if (showAddExpense) AddExpenseDialog(onDismiss = { showAddExpense = false }) { title, amount, category ->
         viewModel.addExpense(title, amount, category)
