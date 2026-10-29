@@ -43,7 +43,7 @@ fun GoalsScreen(viewModel: MomentoViewModel) {
 
     if (showAddDialog) {
         AddGoalDialog(onDismiss = { showAddDialog = false }) { title, description, targetDate ->
-            viewModel.addGoal(title, description, targetDate ?: (System.currentTimeMillis() + 2592000000L))
+            viewModel.addGoal(title, description, targetDateMillis = targetDate ?: (System.currentTimeMillis() + 2592000000L))
         }
     }
     progressTarget?.let { goal ->
