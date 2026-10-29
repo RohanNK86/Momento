@@ -12,12 +12,8 @@ import kotlinx.serialization.json.Json
 import java.text.SimpleDateFormat
 import java.util.*
 import io.github.jan.supabase.gotrue.auth
-import io.github.jan.supabase.gotrue.providers.builtin.Email
-import io.github.jan.supabase.gotrue.SessionStatus
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.serialization.Serializable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 
 class MomentoViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -54,57 +50,6 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
     val userProfile: StateFlow<UserProfile?> = repository.userProfile.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), null
     )
-
-    // ── Auth State ────────────────────────────────────────────────────────────
-    val sessionStatus: StateFlow<SessionStatus> = SupabaseClient.client.auth.sessionStatus.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), SessionStatus.LoadingFromStorage
-    )
-
-    var authError by androidx.compose.runtime.mutableStateOf<String?>(null)
-        private set
-
-    fun clearAuthError() { authError = null }
-
-    fun signUp(email: String, password: String) = viewModelScope.launch {
-        try {
-            authError = null
-            SupabaseClient.client.auth.signUpWith(Email) {
-                this.email = email
-                this.password = password
-            }
-        } catch (e: Exception) {
-            authError = e.message ?: "Signup failed"
-        }
-    }
-
-    fun signIn(email: String, password: String) = viewModelScope.launch {
-        try {
-            authError = null
-            SupabaseClient.client.auth.signInWith(Email) {
-                this.email = email
-                this.password = password
-            }
-        } catch (e: Exception) {
-            authError = e.message ?: "Login failed"
-        }
-    }
-
-    fun signOut() = viewModelScope.launch {
-        try {
-            SupabaseClient.client.auth.signOut()
-        } catch (e: Exception) {
-            authError = e.message ?: "Signout failed"
-        }
-    }
-
-    fun signInWithGoogle() = viewModelScope.launch {
-        try {
-            authError = null
-            SupabaseClient.client.auth.signInWith(io.github.jan.supabase.gotrue.providers.Google)
-        } catch (e: Exception) {
-            authError = e.message ?: "Google Sign-in failed"
-        }
-    }
 
     @Serializable
     data class SupabaseProfile(

@@ -34,22 +34,13 @@ import com.example.ui.theme.*
 import com.example.viewmodel.MomentoViewModel
 import java.text.SimpleDateFormat
 import java.util.*
-import io.github.jan.supabase.gotrue.SessionStatus
 
 @Composable
 fun ProfileScreen(viewModel: MomentoViewModel, onNavigateBack: () -> Unit) {
     val profile by viewModel.userProfile.collectAsStateWithLifecycle()
     var isEditing by remember { mutableStateOf(false) }
     
-    val sessionStatus by viewModel.sessionStatus.collectAsState()
     val context = LocalContext.current
-
-    // Redirect to login if signed out
-    LaunchedEffect(sessionStatus) {
-        if (sessionStatus is SessionStatus.NotAuthenticated) {
-            onNavigateBack() // This might just pop to main, but actually we should pop to login. Wait, MainActivity handles splash logic, but let's just let the user navigate, or better, MainActivity should handle global redirect. But since this is a simple setup, popping back stack is fine if we redirect correctly. Wait, just popping back to home which is protected is fine. But actually, let's just trigger it.
-        }
-    }
 
     // Editable state
     var name by remember(profile) { mutableStateOf(profile?.name ?: "Your Name") }
@@ -181,17 +172,6 @@ fun ProfileScreen(viewModel: MomentoViewModel, onNavigateBack: () -> Unit) {
             item { Spacer(modifier = Modifier.height(24.dp)) }
 
 
-
-            item {
-                Button(
-                    onClick = { viewModel.signOut() },
-                    modifier = Modifier.fillMaxWidth().height(50.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text("Log Out", color = Color.White, fontWeight = FontWeight.Bold)
-                }
-            }
 
             item { Spacer(modifier = Modifier.height(80.dp)) }
         }
