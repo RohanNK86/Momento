@@ -66,11 +66,11 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
     ) {
         item { Spacer(modifier = Modifier.height(8.dp)) }
         item {
-            Text("Analytics", style = MaterialTheme.typography.displaySmall, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
+            Text("Analytics", style = MaterialTheme.typography.headlineMedium, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
             Text("Your productivity at a glance", color = MomentoOnSurfaceVariant, fontSize = 13.sp)
         }
 
-        // ── Animated Arc Stats Row ─────────────────────────────────────────────
+        // â”€â”€ Animated Arc Stats Row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         item {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 AnimatedArcCard(Modifier.weight(1f), "Tasks", completionRate, MomentoPrimary, "${tasks.count { it.isCompleted }}/${tasks.size}")
@@ -79,7 +79,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // ── Weekly Activity ────────────────────────────────────────────────────
+        // â”€â”€ Weekly Activity â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         item {
             GlassCard {
                 Column {
@@ -94,7 +94,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
                                 Box(
                                     modifier = Modifier.width(28.dp).height((animH * 80).dp.coerceAtLeast(4.dp))
                                         .clip(RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp))
-                                        .background(if (count > 0) MomentoPrimary.copy(alpha = 0.8f) else Color.White.copy(alpha = 0.06f))
+                                        .background(if (count > 0) MomentoPrimary.copy(alpha = 0.8f) else MomentoSurfaceContainer)
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(day, color = MomentoOnSurfaceVariant, fontSize = 10.sp)
@@ -105,7 +105,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // ── Summary Cards ──────────────────────────────────────────────────────
+        // â”€â”€ Summary Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         item {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 SummaryStatCard(Modifier.weight(1f), "Total Tasks", tasks.size.toString(), Icons.Default.TaskAlt, MomentoPrimary)
@@ -115,11 +115,11 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
         item {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 SummaryStatCard(Modifier.weight(1f), "Events", events.size.toString(), Icons.Default.Event, MomentoSecondary)
-                SummaryStatCard(Modifier.weight(1f), "Expenses", "₹${String.format(java.util.Locale.US, "%.0f", totalExpenses)}", Icons.Default.Payments, Color(0xFFF59E0B))
+                SummaryStatCard(Modifier.weight(1f), "Expenses", "â‚¹${String.format(java.util.Locale.US, "%.0f", totalExpenses)}", Icons.Default.Payments, Color(0xFFF59E0B))
             }
         }
 
-        // ── Overdue Tasks ──────────────────────────────────────────────────────
+        // â”€â”€ Overdue Tasks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         if (overdueTasks.isNotEmpty()) {
             item {
                 GlassCard {
@@ -145,7 +145,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // ── Goal Progress Breakdown ────────────────────────────────────────────
+        // â”€â”€ Goal Progress Breakdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         if (goals.isNotEmpty()) {
             item {
                 GlassCard {
@@ -168,7 +168,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
                                     Spacer(modifier = Modifier.height(4.dp))
                                     LinearProgressIndicator(
                                         progress = { animP }, modifier = Modifier.fillMaxWidth().height(5.dp).clip(RoundedCornerShape(3.dp)),
-                                        color = gc, trackColor = Color.White.copy(alpha = 0.06f)
+                                        color = gc, trackColor = MomentoSurfaceContainer
                                     )
                                 }
                             }
@@ -178,7 +178,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // ── Expense Category Breakdown ─────────────────────────────────────────
+        // â”€â”€ Expense Category Breakdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         if (expenses.isNotEmpty()) {
             item {
                 GlassCard {
@@ -194,11 +194,11 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
                                 Box(modifier = Modifier.size(10.dp).clip(RoundedCornerShape(5.dp)).background(cc))
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(cat, color = MomentoOnSurface, fontSize = 13.sp, modifier = Modifier.weight(1f))
-                                Text("₹${String.format(java.util.Locale.US, "%.0f", catTotal)}", color = cc, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                                Text("â‚¹${String.format(java.util.Locale.US, "%.0f", catTotal)}", color = cc, fontSize = 13.sp, fontWeight = FontWeight.Bold)
                             }
                             LinearProgressIndicator(
                                 progress = { ratio }, modifier = Modifier.fillMaxWidth().height(3.dp).clip(RoundedCornerShape(2.dp)).padding(start = 18.dp),
-                                color = cc, trackColor = Color.White.copy(alpha = 0.06f)
+                                color = cc, trackColor = MomentoSurfaceContainer
                             )
                         }
                     }
@@ -215,8 +215,8 @@ private fun AnimatedArcCard(modifier: Modifier, label: String, progress: Float, 
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
-            .background(Color.White.copy(alpha = 0.05f))
-            .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(20.dp))
+            .background(MomentoSurfaceContainer)
+            .border(1.dp, MomentoOutline, RoundedCornerShape(20.dp))
             .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -255,3 +255,4 @@ private fun SummaryStatCard(modifier: Modifier, label: String, value: String, ic
         }
     }
 }
+

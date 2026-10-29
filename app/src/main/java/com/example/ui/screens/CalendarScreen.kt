@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.data.Event
 import com.example.data.Task
 import com.example.ui.components.AddEventDialog
+import com.example.ui.components.AddActionButton
 import com.example.ui.components.GlassCard
 import com.example.ui.theme.*
 import com.example.viewmodel.MomentoViewModel
@@ -39,8 +41,8 @@ fun CalendarScreen(viewModel: MomentoViewModel) {
     var showAddEvent by remember { mutableStateOf(false) }
 
     if (showAddEvent) {
-        AddEventDialog(onDismiss = { showAddEvent = false }) { title, category ->
-            viewModel.addEvent(title, System.currentTimeMillis(), category)
+        AddEventDialog(onDismiss = { showAddEvent = false }) { title, category, eventTime, location ->
+            viewModel.addEvent(title, eventTime, category, location = location)
         }
     }
 
@@ -94,25 +96,23 @@ fun CalendarScreen(viewModel: MomentoViewModel) {
         item {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Column {
-                    Text("Events", style = MaterialTheme.typography.displaySmall, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
+                    Text("Events", style = MaterialTheme.typography.headlineMedium, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
                     Text("$monthYearStr", color = MomentoOnSurfaceVariant, fontSize = 13.sp)
                 }
-                FloatingActionButton(onClick = { showAddEvent = true }, modifier = Modifier.size(48.dp), containerColor = Color.Transparent, shape = RoundedCornerShape(14.dp)) {
-                    Box(modifier = Modifier.fillMaxSize().background(androidx.compose.ui.graphics.Brush.linearGradient(listOf(MomentoSecondary, MomentoPrimary)), RoundedCornerShape(14.dp)), contentAlignment = Alignment.Center) {
-                        Icon(Icons.Default.Add, null, tint = Color.White)
-                    }
-                }
+                AddActionButton(onClick = { showAddEvent = true }, description = "Add event")
             }
         }
 
-        // ── Calendar Grid ──────────────────────────────────────────────────────
+        // â”€â”€ Calendar Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         item {
             GlassCard(alpha = 0.07f) {
                 Column {
                     // Month navigation
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                         IconButton(onClick = { navigateMonth(-1) }) { Icon(Icons.Default.ChevronLeft, null, tint = MomentoOnSurface) }
-                        Text(monthYearStr, style = MaterialTheme.typography.titleMedium, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
+                        AnimatedContent(targetState = monthYearStr, label = "calendar-month") { month ->
+                            Text(month, style = MaterialTheme.typography.titleMedium, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
+                        }
                         IconButton(onClick = { navigateMonth(1) }) { Icon(Icons.Default.ChevronRight, null, tint = MomentoOnSurface) }
                     }
                     Spacer(modifier = Modifier.height(8.dp))
@@ -136,8 +136,10 @@ fun CalendarScreen(viewModel: MomentoViewModel) {
                                         val isToday    = isCurrentMonth && day == todayDay
                                         val isSelected = day == selectedDay
                                         val hasEvent   = day in eventDays
+                                        val selectedScale by animateFloatAsState(if (isSelected) 1.04f else 1f, tween(180), label = "calendar-day-$day")
                                         Box(
                                             modifier = Modifier.weight(1f).aspectRatio(1f).padding(2.dp)
+                                                .graphicsLayer { scaleX = selectedScale; scaleY = selectedScale }
                                                 .clip(CircleShape)
                                                 .background(
                                                     when {
@@ -150,7 +152,7 @@ fun CalendarScreen(viewModel: MomentoViewModel) {
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                                Text(day.toString(), color = when { isSelected -> Color.White; isToday -> MomentoPrimary; else -> MomentoOnSurface }, fontWeight = if (isToday || isSelected) FontWeight.Bold else FontWeight.Normal, fontSize = 13.sp)
+                                                Text(day.toString(), color = when { isSelected -> MaterialTheme.colorScheme.onPrimary; isToday -> MomentoPrimary; else -> MomentoOnSurface }, fontWeight = if (isToday || isSelected) FontWeight.Bold else FontWeight.Normal, fontSize = 13.sp)
                                                 if (hasEvent && !isSelected) { Box(modifier = Modifier.size(4.dp).clip(CircleShape).background(MomentoSecondary)) }
                                             }
                                         }
@@ -165,7 +167,7 @@ fun CalendarScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // ── Selected Day Detail ────────────────────────────────────────────────
+        // â”€â”€ Selected Day Detail â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         item {
             val selDateStr = SimpleDateFormat("EEEE, MMMM d", Locale.getDefault()).format(selCal.time)
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -176,7 +178,7 @@ fun CalendarScreen(viewModel: MomentoViewModel) {
 
         if (dayEvents.isEmpty() && dayTasks.isEmpty()) {
             item {
-                Box(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(Color.White.copy(alpha = 0.04f)).border(1.dp, Color.White.copy(alpha = 0.06f), RoundedCornerShape(16.dp)).padding(24.dp), contentAlignment = Alignment.Center) {
+                Box(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(MomentoSurfaceContainer).border(1.dp, MomentoOutline, RoundedCornerShape(16.dp)).padding(24.dp), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(Icons.Default.EventBusy, null, tint = MomentoOnSurfaceVariant, modifier = Modifier.size(32.dp))
                         Spacer(modifier = Modifier.height(8.dp))
@@ -193,7 +195,7 @@ fun CalendarScreen(viewModel: MomentoViewModel) {
         if (dayTasks.isNotEmpty()) {
             item { Text("TASKS DUE", color = MomentoOnSurfaceVariant, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp) }
             items(dayTasks, key = { "t_${it.id}" }) { task ->
-                Row(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Color.White.copy(alpha = 0.04f)).border(1.dp, Color.White.copy(alpha = 0.06f), RoundedCornerShape(12.dp)).padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                Row(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(MomentoSurfaceContainer).border(1.dp, MomentoOutline, RoundedCornerShape(12.dp)).padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
                     val pc = when (task.priority) { Task.Priority.HIGH -> MomentoError; Task.Priority.MEDIUM -> MomentoTertiary; Task.Priority.LOW -> MomentoOnSurfaceVariant }
                     Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(pc))
                     Spacer(modifier = Modifier.width(12.dp))
@@ -207,7 +209,7 @@ fun CalendarScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // ── Upcoming Events ────────────────────────────────────────────────────
+        // â”€â”€ Upcoming Events â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         val upcomingAll = events.filter { it.timeMillis > System.currentTimeMillis() }.take(6)
         if (upcomingAll.isNotEmpty()) {
             item { Spacer(modifier = Modifier.height(4.dp)); Text("UPCOMING", color = MomentoOnSurfaceVariant, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp) }
@@ -220,12 +222,12 @@ fun CalendarScreen(viewModel: MomentoViewModel) {
 @Composable
 fun EventListItem(event: Event, onDelete: () -> Unit) {
     val eventColor = try { Color(android.graphics.Color.parseColor(event.color)) } catch (e: Exception) { MomentoPrimary }
-    val timeFmt = SimpleDateFormat("MMM d · hh:mm a", Locale.getDefault())
+    val timeFmt = SimpleDateFormat("MMM d Â· hh:mm a", Locale.getDefault())
     var showMenu by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp))
-            .background(Color.White.copy(alpha = 0.04f))
-            .border(1.dp, Color.White.copy(alpha = 0.06f), RoundedCornerShape(14.dp))
+            .background(MomentoSurfaceContainer)
+            .border(1.dp, MomentoOutline, RoundedCornerShape(14.dp))
             .padding(14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -250,3 +252,4 @@ fun EventListItem(event: Event, onDelete: () -> Unit) {
     }
     Spacer(modifier = Modifier.height(8.dp))
 }
+

@@ -19,6 +19,9 @@ interface TaskDao {
 
     @Query("DELETE FROM tasks WHERE id = :id")
     suspend fun deleteTaskById(id: Int)
+
+    @Query("DELETE FROM tasks")
+    suspend fun deleteAllTasks()
 }
 
 @Dao
@@ -34,6 +37,9 @@ interface GoalDao {
 
     @Query("DELETE FROM goals WHERE id = :id")
     suspend fun deleteGoalById(id: Int)
+
+    @Query("DELETE FROM goals")
+    suspend fun deleteAllGoals()
 }
 
 @Dao
@@ -49,6 +55,9 @@ interface EventDao {
 
     @Query("DELETE FROM events WHERE id = :id")
     suspend fun deleteEventById(id: Int)
+
+    @Query("DELETE FROM events")
+    suspend fun deleteAllEvents()
 }
 
 @Dao
@@ -61,6 +70,9 @@ interface ExpenseDao {
 
     @Query("DELETE FROM expenses WHERE id = :id")
     suspend fun deleteExpenseById(id: Int)
+
+    @Query("DELETE FROM expenses")
+    suspend fun deleteAllExpenses()
 }
 
 @Dao
@@ -76,6 +88,9 @@ interface HabitDao {
 
     @Query("DELETE FROM habits WHERE id = :id")
     suspend fun deleteHabitById(id: Int)
+
+    @Query("DELETE FROM habits")
+    suspend fun deleteAllHabits()
 }
 
 @Dao
@@ -91,6 +106,9 @@ interface NoteDao {
 
     @Query("DELETE FROM notes WHERE id = :id")
     suspend fun deleteNoteById(id: Int)
+
+    @Query("DELETE FROM notes")
+    suspend fun deleteAllNotes()
 }
 
 @Dao
@@ -101,3 +119,4 @@ interface UserProfileDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdateProfile(profile: UserProfile)
 }
+
