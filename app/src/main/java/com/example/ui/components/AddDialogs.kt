@@ -19,7 +19,7 @@ import com.example.data.Task
 import com.example.ui.theme.*
 import java.util.Calendar
 
-// â”€â”€ Shared text field colors â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Shared text field colors ─────────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun dialogTextFieldColors() = TextFieldDefaults.colors(
@@ -34,7 +34,7 @@ private fun dialogTextFieldColors() = TextFieldDefaults.colors(
     unfocusedLabelColor     = MomentoOnSurfaceVariant
 )
 
-// â”€â”€ Add Task Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Add Task Dialog ──────────────────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTaskDialog(onDismiss: () -> Unit, onAdd: (String, Task.Priority, String, String, Long?) -> Unit) {
@@ -88,7 +88,7 @@ fun AddTaskDialog(onDismiss: () -> Unit, onAdd: (String, Task.Priority, String, 
     }
 }
 
-// â”€â”€ Add Goal Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Add Goal Dialog ──────────────────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddGoalDialog(onDismiss: () -> Unit, onAdd: (String, String, Long?) -> Unit) {
@@ -124,7 +124,7 @@ fun AddGoalDialog(onDismiss: () -> Unit, onAdd: (String, String, Long?) -> Unit)
     }
 }
 
-// â”€â”€ Add Event Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Add Event Dialog ─────────────────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEventDialog(onDismiss: () -> Unit, onAdd: (String, String, Long, String) -> Unit) {
@@ -184,7 +184,7 @@ fun AddEventDialog(onDismiss: () -> Unit, onAdd: (String, String, Long, String) 
     }
 }
 
-// â”€â”€ Add Expense Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Add Expense Dialog ───────────────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddExpenseDialog(onDismiss: () -> Unit, onAdd: (String, Double, String) -> Unit) {
@@ -199,7 +199,7 @@ fun AddExpenseDialog(onDismiss: () -> Unit, onAdd: (String, Double, String) -> U
             Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text("Add Expense", style = MaterialTheme.typography.titleLarge, color = MomentoOnSurface)
                 OutlinedTextField(value = title, onValueChange = { title = it }, label = { Text("Description *") }, modifier = Modifier.fillMaxWidth(), colors = dialogTextFieldColors(), singleLine = true)
-                OutlinedTextField(value = amount, onValueChange = { amount = it }, label = { Text("Amount (INR) *") }, modifier = Modifier.fillMaxWidth(), colors = dialogTextFieldColors(),
+                OutlinedTextField(value = amount, onValueChange = { amount = it }, label = { Text("Amount (₹) *") }, modifier = Modifier.fillMaxWidth(), colors = dialogTextFieldColors(),
                     keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Number), singleLine = true)
                 Text("Category", color = MomentoOnSurfaceVariant, style = MaterialTheme.typography.labelMedium)
                 androidx.compose.foundation.lazy.LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -223,7 +223,7 @@ fun AddExpenseDialog(onDismiss: () -> Unit, onAdd: (String, Double, String) -> U
     }
 }
 
-// â”€â”€ Add Habit Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Add Habit Dialog ─────────────────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddHabitDialog(onDismiss: () -> Unit, onAdd: (String, String, String, String) -> Unit) {
@@ -271,7 +271,7 @@ fun AddHabitDialog(onDismiss: () -> Unit, onAdd: (String, String, String, String
     }
 }
 
-// â”€â”€ Add Note Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Add Note Dialog ──────────────────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddNoteDialog(
@@ -302,7 +302,7 @@ fun AddNoteDialog(
     }
 }
 
-// â”€â”€ Focus Mode Dialog (Pomodoro) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Focus Mode Dialog (Pomodoro) ─────────────────────────────────────────────
 @Composable
 fun FocusModeDialog(onDismiss: () -> Unit) {
     Dialog(onDismissRequest = onDismiss, properties = androidx.compose.ui.window.DialogProperties(usePlatformDefaultWidth = false)) {
@@ -336,11 +336,11 @@ fun FocusModeDialog(onDismiss: () -> Unit) {
                     Text(String.format(java.util.Locale.US, "%02d:%02d", minutes, seconds), style = MaterialTheme.typography.displayMedium.copy(fontSize = 48.sp), color = MomentoPrimary)
                 }
 
-                if (sessionsDone > 0) Text("$sessionsDone session${if (sessionsDone > 1) "s" else ""} completed", color = MomentoTertiary)
+                if (sessionsDone > 0) Text("✅ $sessionsDone session${if (sessionsDone > 1) "s" else ""} completed!", color = MomentoTertiary)
 
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedButton(onClick = { timeLeft = 25 * 60; isRunning = false }, colors = ButtonDefaults.outlinedButtonColors(contentColor = MomentoOnSurface)) { Text("Reset") }
-                    Button(onClick = { isRunning = !isRunning }, colors = ButtonDefaults.buttonColors(containerColor = if (isRunning) MomentoSecondary else MomentoPrimary)) { Text(if (isRunning) "Pause" else "Start") }
+                    Button(onClick = { isRunning = !isRunning }, colors = ButtonDefaults.buttonColors(containerColor = if (isRunning) MomentoSecondary else MomentoPrimary)) { Text(if (isRunning) "⏸ Pause" else "▶ Start") }
                     OutlinedButton(onClick = onDismiss, colors = ButtonDefaults.outlinedButtonColors(contentColor = MomentoOnSurface)) { Text("Exit") }
                 }
             }

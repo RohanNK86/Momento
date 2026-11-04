@@ -72,7 +72,7 @@ fun NotesScreen(viewModel: MomentoViewModel) {
         OutlinedTextField(
             value = searchQuery, onValueChange = { searchQuery = it },
             modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)),
-            placeholder = { Text("Search notes...", color = MomentoOnSurfaceVariant) },
+            placeholder = { Text("Search notes…", color = MomentoOnSurfaceVariant) },
             leadingIcon = { Icon(Icons.Default.Search, null, tint = MomentoOnSurfaceVariant) },
             trailingIcon = { if (searchQuery.isNotEmpty()) IconButton(onClick = { searchQuery = "" }) { Icon(Icons.Default.Clear, null, tint = MomentoOnSurfaceVariant) } },
             colors = momentoTextFieldColors(), shape = RoundedCornerShape(12.dp), singleLine = true

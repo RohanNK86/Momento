@@ -8,7 +8,7 @@ plugins {
 
 android {
   namespace = "com.example"
-  compileSdk { version = release(36) { minorApiLevel = 1 } }
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "com.aistudio.momento.vbxpz"
@@ -44,9 +44,7 @@ android {
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
       signingConfig = signingConfigs.getByName("debugConfig")
     }
-    debug {
-      signingConfig = signingConfigs.getByName("debugConfig")
-    }
+
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -113,4 +111,3 @@ dependencies {
   "ksp"(libs.androidx.room.compiler)
   // "ksp"(libs.moshi.kotlin.codegen)
 }
-

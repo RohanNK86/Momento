@@ -29,9 +29,7 @@ import com.example.ui.components.AddExpenseDialog
 import com.example.ui.components.AddGoalDialog
 import com.example.ui.components.AddTaskDialog
 import com.example.ui.components.GlassCard
-import com.example.ui.components.ProfileAvatarButton
 import com.example.ui.theme.*
-import com.example.ui.util.Formatters
 import com.example.viewmodel.MomentoViewModel
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
@@ -41,10 +39,7 @@ import java.util.*
 fun DashboardScreen(
     viewModel: MomentoViewModel,
     onFocusModeClick: () -> Unit = {},
-    onNavigate: (String) -> Unit = {},
-    profileInitials: String = "Y",
-    onProfileClick: () -> Unit = {},
-    onSearchClick: () -> Unit = {}
+    onNavigate: (String) -> Unit = {}
 ) {
     val tasks by viewModel.tasks.collectAsStateWithLifecycle()
     val goals by viewModel.goals.collectAsStateWithLifecycle()
@@ -97,58 +92,26 @@ fun DashboardScreen(
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 4.dp, bottom = 2.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    "Momento",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MomentoOnSurface,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.weight(1f)
-                )
-                IconButton(onClick = onSearchClick) {
-                    Icon(Icons.Default.Search, contentDescription = "Search", tint = MomentoOnSurfaceVariant)
-                }
-                ProfileAvatarButton(initials = profileInitials, onClick = onProfileClick)
-            }
-        }
+        item { Spacer(modifier = Modifier.height(8.dp)) }
 
+        // ── Greeting Card ─────────────────────────────────────────────────────
         item {
             AnimatedVisibility(visible = visible, enter = fadeIn() + slideInVertically { -40 }) {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
-                    val greetIcon = when {
-                        hour in 5..16 -> Icons.Default.WbSunny
-                        hour in 17..20 -> Icons.Default.DarkMode
-                        else -> Icons.Default.NightsStay
-                    }
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(greetIcon, contentDescription = null, tint = MomentoPrimary, modifier = Modifier.size(28.dp))
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            greeting,
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = MomentoOnSurface,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 26.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
+                Column(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(24.dp)).background(MomentoPrimaryContainer).padding(20.dp)) {
+                    Text("YOUR DAILY SPACE", color = MomentoPrimary, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, letterSpacing = 1.2.sp)
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(greeting, style = MaterialTheme.typography.headlineMedium, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(dateString, style = MaterialTheme.typography.bodyMedium, color = MomentoOnSurfaceVariant)
-                    Spacer(modifier = Modifier.height(14.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         QuickActionChip(Modifier.weight(1f), "Task", Icons.Default.AddTask) { showAddTask = true }
                         QuickActionChip(Modifier.weight(1f), "Goal", Icons.Default.Flag) { showAddGoal = true }
                         QuickActionChip(Modifier.weight(1f), "Expense", Icons.Default.Payments) { showAddExpense = true }
                     }
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     TextButton(onClick = onFocusModeClick, contentPadding = PaddingValues(horizontal = 0.dp)) {
                         Icon(Icons.Default.Timer, null, modifier = Modifier.size(17.dp))
                         Spacer(modifier = Modifier.width(6.dp))
@@ -158,7 +121,7 @@ fun DashboardScreen(
             }
         }
 
-        // â”€â”€ Quick Stats â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Quick Stats ───────────────────────────────────────────────────────
         item {
             AnimatedVisibility(visible = visible, enter = fadeIn(tween(300, 100)) + slideInVertically(tween(300, 100)) { 40 }) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -178,7 +141,7 @@ fun DashboardScreen(
                     Icon(Icons.Default.AccountBalanceWallet, null, tint = MomentoPrimary, modifier = Modifier.size(20.dp))
                     Spacer(Modifier.width(10.dp))
                     Text("Spent this month", color = MomentoOnSurfaceVariant, modifier = Modifier.weight(1f))
-                    Text(Formatters.money(monthSpend), color = MomentoOnSurface, fontWeight = FontWeight.SemiBold)
+                    Text("₹${String.format(Locale.getDefault(), "%.2f", monthSpend)}", color = MomentoOnSurface, fontWeight = FontWeight.SemiBold)
                     Spacer(Modifier.width(4.dp))
                     Icon(Icons.Default.ChevronRight, null, tint = MomentoOnSurfaceVariant, modifier = Modifier.size(18.dp))
                 }
@@ -202,7 +165,7 @@ fun DashboardScreen(
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         if (highPriorityTasks.isEmpty()) {
-                            Text("All high-priority tasks done!", color = MomentoTertiary, style = MaterialTheme.typography.bodyMedium)
+                            Text("🎉 All high-priority tasks done!", color = MomentoTertiary, style = MaterialTheme.typography.bodyMedium)
                         } else {
                             highPriorityTasks.forEach { task ->
                                 Row(
@@ -232,7 +195,7 @@ fun DashboardScreen(
             }
         }
 
-        // â”€â”€ Habits Today â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Habits Today ──────────────────────────────────────────────────────
         item {
             AnimatedVisibility(visible = visible, enter = fadeIn(tween(600, 250)) + slideInVertically(tween(400, 250)) { 40 }) {
                 GlassCard {
@@ -263,11 +226,7 @@ fun DashboardScreen(
                                     Icon(if (done) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked, null, tint = if (done) habitColor else MomentoOnSurfaceVariant, modifier = Modifier.size(24.dp))
                                     Spacer(modifier = Modifier.height(6.dp))
                                     Text(habit.name.take(10), color = if (done) habitColor else MomentoOnSurface, fontSize = 11.sp, fontWeight = FontWeight.Medium)
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(Icons.Default.LocalFireDepartment, null, tint = Color(0xFFF59E0B), modifier = Modifier.size(12.dp))
-                                        Spacer(Modifier.width(2.dp))
-                                        Text("${habit.currentStreak}", color = MomentoOnSurfaceVariant, fontSize = 10.sp)
-                                    }
+                                    Text("🔥 ${habit.currentStreak}", color = MomentoOnSurfaceVariant, fontSize = 10.sp)
                                 }
                             }
                         }
@@ -276,7 +235,7 @@ fun DashboardScreen(
             }
         }
 
-        // â”€â”€ Upcoming Events â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Upcoming Events ───────────────────────────────────────────────────
         item {
             AnimatedVisibility(visible = visible, enter = fadeIn(tween(700, 300)) + slideInVertically(tween(400, 300)) { 40 }) {
                 GlassCard {
@@ -320,7 +279,7 @@ fun DashboardScreen(
             }
         }
 
-        // â”€â”€ Quick Shortcuts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Quick Shortcuts ───────────────────────────────────────────────────
         item {
             AnimatedVisibility(visible = visible, enter = fadeIn(tween(800, 350))) {
                 Column {

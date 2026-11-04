@@ -22,16 +22,16 @@ val MomentoError @Composable get() = MaterialTheme.colorScheme.error
 val MomentoErrorContainer @Composable get() = MaterialTheme.colorScheme.errorContainer
 val MomentoOutline @Composable get() = MaterialTheme.colorScheme.outline
 
-internal val Ink = Color(0xFF20212A)
-internal val SecondaryInk = Color(0xFF686A76)
-internal val Paper = Color(0xFFF7F7F9)
+internal val Ink = Color(0xFF242139)
+internal val SecondaryInk = Color(0xFF6D687E)
+internal val Paper = Color(0xFFF7F5FA)
 internal val White = Color(0xFFFFFFFF)
-internal val Violet = Color(0xFF6857C8)
-internal val PaleViolet = Color(0xFFEAE6FF)
-internal val DeepViolet = Color(0xFF30266D)
-internal val Sage = Color(0xFF26836C)
+internal val Violet = Color(0xFF6552B8)
+internal val PaleViolet = Color(0xFFECE7FF)
+internal val DeepViolet = Color(0xFF33276B)
+internal val Sage = Color(0xFF227B6D)
 internal val MutedRed = Color(0xFFB54748)
-internal val Hairline = Color(0xFFDCDCE4)
+internal val Hairline = Color(0xFFE8E3EF)
 
 internal val DarkInk = Color(0xFFF2F1F6)
 internal val DarkSecondaryInk = Color(0xFFB0ADBA)

@@ -29,7 +29,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.data.Goal
 import com.example.ui.components.GlassCard
 import com.example.ui.theme.*
-import com.example.ui.util.Formatters
 import com.example.viewmodel.MomentoViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -71,7 +70,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
             Text("Your productivity at a glance", color = MomentoOnSurfaceVariant, fontSize = 13.sp)
         }
 
-        // â”€â”€ Animated Arc Stats Row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Animated Arc Stats Row ─────────────────────────────────────────────
         item {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 AnimatedArcCard(Modifier.weight(1f), "Tasks", completionRate, MomentoPrimary, "${tasks.count { it.isCompleted }}/${tasks.size}")
@@ -80,7 +79,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // â”€â”€ Weekly Activity â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Weekly Activity ────────────────────────────────────────────────────
         item {
             GlassCard {
                 Column {
@@ -106,7 +105,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // â”€â”€ Summary Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Summary Cards ──────────────────────────────────────────────────────
         item {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 SummaryStatCard(Modifier.weight(1f), "Total Tasks", tasks.size.toString(), Icons.Default.TaskAlt, MomentoPrimary)
@@ -116,11 +115,11 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
         item {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 SummaryStatCard(Modifier.weight(1f), "Events", events.size.toString(), Icons.Default.Event, MomentoSecondary)
-                SummaryStatCard(Modifier.weight(1f), "Expenses", Formatters.moneyWhole(totalExpenses), Icons.Default.Payments, Color(0xFFF59E0B))
+                SummaryStatCard(Modifier.weight(1f), "Expenses", "₹${String.format(java.util.Locale.US, "%.0f", totalExpenses)}", Icons.Default.Payments, Color(0xFFF59E0B))
             }
         }
 
-        // â”€â”€ Overdue Tasks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Overdue Tasks ──────────────────────────────────────────────────────
         if (overdueTasks.isNotEmpty()) {
             item {
                 GlassCard {
@@ -146,7 +145,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // â”€â”€ Goal Progress Breakdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Goal Progress Breakdown ────────────────────────────────────────────
         if (goals.isNotEmpty()) {
             item {
                 GlassCard {
@@ -179,7 +178,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // â”€â”€ Expense Category Breakdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Expense Category Breakdown ─────────────────────────────────────────
         if (expenses.isNotEmpty()) {
             item {
                 GlassCard {
@@ -195,7 +194,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
                                 Box(modifier = Modifier.size(10.dp).clip(RoundedCornerShape(5.dp)).background(cc))
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(cat, color = MomentoOnSurface, fontSize = 13.sp, modifier = Modifier.weight(1f))
-                                Text(Formatters.moneyWhole(catTotal), color = cc, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                                Text("₹${String.format(java.util.Locale.US, "%.0f", catTotal)}", color = cc, fontSize = 13.sp, fontWeight = FontWeight.Bold)
                             }
                             LinearProgressIndicator(
                                 progress = { ratio }, modifier = Modifier.fillMaxWidth().height(3.dp).clip(RoundedCornerShape(2.dp)).padding(start = 18.dp),

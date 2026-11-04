@@ -123,7 +123,7 @@ fun TasksScreen(viewModel: MomentoViewModel) {
         OutlinedTextField(
             value = searchQuery, onValueChange = { searchQuery = it },
             modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)),
-            placeholder = { Text("Search tasks...", color = MomentoOnSurfaceVariant) },
+            placeholder = { Text("Search tasks…", color = MomentoOnSurfaceVariant) },
             leadingIcon = { Icon(Icons.Default.Search, null, tint = MomentoOnSurfaceVariant) },
             trailingIcon = { if (searchQuery.isNotEmpty()) IconButton(onClick = { searchQuery = "" }) { Icon(Icons.Default.Clear, null, tint = MomentoOnSurfaceVariant) } },
             colors = momentoTextFieldColors(), shape = RoundedCornerShape(12.dp), singleLine = true

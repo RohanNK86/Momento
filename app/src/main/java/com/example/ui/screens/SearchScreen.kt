@@ -26,7 +26,7 @@ import com.example.ui.theme.*
 import com.example.viewmodel.MomentoViewModel
 
 @Composable
-fun SearchScreen(viewModel: MomentoViewModel, onNavigate: (String) -> Unit) {
+fun SearchScreen(viewModel: MomentoViewModel, onNavigate: (String) -> Unit, onNavigateBack: () -> Unit) {
     val tasks by viewModel.tasks.collectAsStateWithLifecycle()
     val events by viewModel.events.collectAsStateWithLifecycle()
     val goals by viewModel.goals.collectAsStateWithLifecycle()
@@ -46,14 +46,17 @@ fun SearchScreen(viewModel: MomentoViewModel, onNavigate: (String) -> Unit) {
 
     Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
         Spacer(modifier = Modifier.height(8.dp))
-        Text("Search", style = MaterialTheme.typography.headlineMedium, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = onNavigateBack) { Icon(Icons.Default.ArrowBack, "Back", tint = MomentoOnSurface) }
+            Text("Search", style = MaterialTheme.typography.headlineMedium, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
+        }
         Text("Find anything across Momento", color = MomentoOnSurfaceVariant, fontSize = 13.sp)
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = query, onValueChange = { query = it },
             modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)),
-            placeholder = { Text("Tasks, events, notes, goals...", color = MomentoOnSurfaceVariant) },
+            placeholder = { Text("Tasks, events, notes, goals…", color = MomentoOnSurfaceVariant) },
             leadingIcon = { Icon(Icons.Default.Search, null, tint = MomentoPrimary) },
             trailingIcon = { if (query.isNotEmpty()) IconButton(onClick = { query = "" }) { Icon(Icons.Default.Clear, null, tint = MomentoOnSurfaceVariant) } },
             colors = momentoTextFieldColors(), shape = RoundedCornerShape(16.dp), singleLine = true
@@ -68,7 +71,7 @@ fun SearchScreen(viewModel: MomentoViewModel, onNavigate: (String) -> Unit) {
                         Icon(Icons.Default.Search, null, tint = MomentoOnSurfaceVariant, modifier = Modifier.size(56.dp))
                         Spacer(modifier = Modifier.height(12.dp))
                         Text("Type to search", color = MomentoOnSurfaceVariant, style = MaterialTheme.typography.bodyLarge)
-                        Text("Tasks / Events / Goals / Habits / Notes", color = MomentoOnSurfaceVariant, fontSize = 12.sp)
+                        Text("Tasks · Events · Goals · Habits · Notes", color = MomentoOnSurfaceVariant, fontSize = 12.sp)
                     }
                 }
             }
@@ -90,7 +93,7 @@ fun SearchScreen(viewModel: MomentoViewModel, onNavigate: (String) -> Unit) {
                         item { SearchSectionHeader("Tasks", Icons.Default.TaskAlt, MomentoPrimary, matchedTasks.size) }
                         items(matchedTasks.take(5)) { task ->
                             SearchResultCard(
-                                title = task.title, subtitle = "${task.priority.name} / ${task.category}",
+                                title = task.title, subtitle = "${task.priority.name} · ${task.category}",
                                 icon = Icons.Default.TaskAlt, color = MomentoPrimary,
                                 badge = if (task.isCompleted) "Done" else "Pending"
                             ) { onNavigate("tasks") }
@@ -120,7 +123,7 @@ fun SearchScreen(viewModel: MomentoViewModel, onNavigate: (String) -> Unit) {
                         items(matchedHabits.take(5)) { habit ->
                             val hc = try { Color(android.graphics.Color.parseColor(habit.color)) } catch (e: Exception) { MomentoPrimary }
                             SearchResultCard(
-                                title = habit.name, subtitle = "${habit.currentStreak} day streak / ${habit.frequency}",
+                                title = habit.name, subtitle = "🔥 ${habit.currentStreak} day streak · ${habit.frequency}",
                                 icon = Icons.Default.Loop, color = hc, badge = habit.frequency
                             ) { onNavigate("habits") }
                         }

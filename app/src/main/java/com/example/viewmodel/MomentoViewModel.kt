@@ -27,7 +27,7 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
         database.userProfileDao()
     )
 
-    // â”€â”€ StateFlows â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── StateFlows ────────────────────────────────────────────────────────────
     val tasks: StateFlow<List<Task>> = repository.allTasks.stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
@@ -50,14 +50,14 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope, SharingStarted.WhileSubscribed(5000), null
     )
 
-    // â”€â”€ Greeting â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Greeting ──────────────────────────────────────────────────────────────
     fun getGreeting(name: String): String {
         val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
         return when {
-            hour in 5..11  -> "Good Morning, $name â˜€ï¸"
-            hour in 12..16 -> "Good Afternoon, $name â˜€ï¸"
-            hour in 17..20 -> "Good Evening, $name ðŸŒ‡"
-            else           -> "Good Night, $name ðŸŒ™"
+            hour in 5..11  -> "Good Morning, $name ☀️"
+            hour in 12..16 -> "Good Afternoon, $name ☀️"
+            hour in 17..20 -> "Good Evening, $name 🌇"
+            else           -> "Good Night, $name 🌙"
         }
     }
 
@@ -66,7 +66,7 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
         return sdf.format(Date())
     }
 
-    // â”€â”€ Task Operations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Task Operations ───────────────────────────────────────────────────────
     fun addTask(
         title: String,
         priority: Task.Priority,
@@ -102,7 +102,7 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
         repository.updateTask(task.copy(isArchived = true))
     }
 
-    // â”€â”€ Goal Operations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Goal Operations ───────────────────────────────────────────────────────
     fun addGoal(
         title: String,
         description: String = "",
@@ -143,7 +143,7 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
         return daysLeft < 7
     }
 
-    // â”€â”€ Event Operations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Event Operations ──────────────────────────────────────────────────────
     fun addEvent(
         title: String,
         timeMillis: Long,
@@ -166,7 +166,7 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
 
     fun deleteEvent(event: Event) = viewModelScope.launch { repository.deleteEvent(event.id) }
 
-    // â”€â”€ Expense Operations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Expense Operations ────────────────────────────────────────────────────
     fun addExpense(title: String, amount: Double, category: String) = viewModelScope.launch {
         repository.insertExpense(
             Expense(
@@ -182,7 +182,7 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
         repository.deleteExpense(expense.id)
     }
 
-    // â”€â”€ Habit Operations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Habit Operations ──────────────────────────────────────────────────────
     fun addHabit(
         name: String,
         description: String = "",
@@ -260,7 +260,7 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
         return streak
     }
 
-    // â”€â”€ Note Operations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Note Operations ───────────────────────────────────────────────────────
     fun addNote(title: String, content: String, tags: String = "", color: String = "#1A1F2D") =
         viewModelScope.launch {
             repository.insertNote(Note(title = title, content = content, tags = tags, color = color))
@@ -280,7 +280,7 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
         repository.updateNote(note.copy(title = title, content = content, updatedAt = System.currentTimeMillis()))
     }
 
-    // â”€â”€ Profile Operations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Profile Operations ────────────────────────────────────────────────────
     fun saveProfile(profile: UserProfile) = viewModelScope.launch {
         repository.saveProfile(profile)
     }
@@ -295,7 +295,7 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
             .ifEmpty { "?" }
     }
 
-    // â”€â”€ Today's Stats â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Today's Stats ─────────────────────────────────────────────────────────
     fun getTodayEventCount(): Int {
         val cal = Calendar.getInstance()
         val startOfDay = cal.apply {
@@ -307,7 +307,7 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
 
     fun getHabitsCompletedToday(): Int = habits.value.count { isHabitCompletedToday(it) }
 
-    // â”€â”€ Motivational Quotes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Motivational Quotes ───────────────────────────────────────────────────
     val motivationalQuotes = listOf(
         "The secret of getting ahead is getting started." to "Mark Twain",
         "It always seems impossible until it's done." to "Nelson Mandela",
@@ -315,7 +315,7 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
         "The future depends on what you do today." to "Mahatma Gandhi",
         "Success is not final, failure is not fatal." to "Winston Churchill",
         "Believe you can and you're halfway there." to "Theodore Roosevelt",
-        "Your limitation - it's only your imagination." to "Unknown",
+        "Your limitation—it's only your imagination." to "Unknown",
         "Push yourself, because no one else is going to do it for you." to "Unknown",
         "Great things never come from comfort zones." to "Unknown",
         "Dream it. Wish it. Do it." to "Unknown",
@@ -328,7 +328,7 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
         return motivationalQuotes[dayOfYear % motivationalQuotes.size]
     }
 
-    // â”€â”€ Seed Data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Seed Data ─────────────────────────────────────────────────────────────
     init {
         viewModelScope.launch {
             repository.userProfile.collect { profile ->

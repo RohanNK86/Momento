@@ -1,41 +1,22 @@
 workflows:
   android-workflow:
-    name: Momento Android Build
+    name: Momento Android debug APK
     max_build_duration: 120
     instance_type: mac_mini_m2
     environment:
       java: 17
       vars:
         JAVA_TOOL_OPTIONS: "-Dfile.encoding=UTF-8"
-        GRADLE_OPTS: "-Dfile.encoding=UTF-8 -Dkotlin.daemon.jvm.options=-Dfile.encoding=UTF-8"
-        LANG: en_US.UTF-8
-        LC_ALL: en_US.UTF-8
     scripts:
-      - name: Set UTF-8 locale
-        script: |
-          export LANG=en_US.UTF-8
-          export LC_ALL=en_US.UTF-8
-          export JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
-      - name: Set up local.properties
+      - name: Set Android SDK location
         script: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
-      - name: Generate Gradle Wrapper
+      - name: Install Android SDK packages
         script: |
-          if [ ! -f "$CM_BUILD_DIR/gradlew" ]; then
-            gradle wrapper --gradle-version 9.3.1
-          fi
-          chmod +x "$CM_BUILD_DIR/gradlew"
-      - name: Generate debug keystore
+          "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$ANDROID_SDK_ROOT" "platforms;android-36" "build-tools;36.0.0"
+      - name: Build debug APK
         script: |
-          if [ ! -f "$CM_BUILD_DIR/debug.keystore" ]; then
-            keytool -genkey -v -keystore "$CM_BUILD_DIR/debug.keystore" -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "cn=Unknown, ou=Unknown, o=Unknown, c=Unknown"
-          fi
-      - name: Build Android App (Release)
-        script: |
-          ./gradlew assembleRelease --no-daemon
+          chmod +x ./gradlew
+          ./gradlew :app:assembleDebug --no-daemon
     artifacts:
-      - app/build/outputs/**/*.apk
-    publishing:
-      email:
-        recipients:
-          - rohankaradigudd@gmail.com
+      - app/build/outputs/apk/debug/*.apk

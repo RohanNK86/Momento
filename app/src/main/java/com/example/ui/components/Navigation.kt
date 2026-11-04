@@ -50,7 +50,7 @@ fun BottomNavBar(currentRoute: String, onNavigate: (String) -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             bottomNavItems.forEach { item ->
-                BottomNavItem(item = item, isSelected = currentRoute == item.route) {
+                BottomNavItem(modifier = Modifier.weight(1f), item = item, isSelected = currentRoute == item.route) {
                     onNavigate(item.route)
                 }
             }
@@ -59,27 +59,22 @@ fun BottomNavBar(currentRoute: String, onNavigate: (String) -> Unit) {
 }
 
 @Composable
-private fun BottomNavItem(item: NavItem, isSelected: Boolean, onClick: () -> Unit) {
+private fun BottomNavItem(modifier: Modifier = Modifier, item: NavItem, isSelected: Boolean, onClick: () -> Unit) {
     val color by animateColorAsState(
         targetValue = if (isSelected) MomentoPrimary else MomentoOnSurfaceVariant,
         animationSpec = tween(200), label = "navColor"
     )
-    val scale by animateFloatAsState(
-        targetValue = if (isSelected) 1.04f else 1f,
-        animationSpec = tween(180), label = "navScale"
-    )
-
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(16.dp))
             .clickable(onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 8.dp),
+            .padding(vertical = 6.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Box(contentAlignment = Alignment.Center) {
                 if (isSelected) {
-                    Box(modifier = Modifier.size(40.dp).clip(RoundedCornerShape(14.dp)).background(MomentoPrimaryContainer))
+                    Box(modifier = Modifier.width(46.dp).height(30.dp).clip(RoundedCornerShape(12.dp)).background(MomentoPrimaryContainer))
                 }
                 Icon(
                     item.icon, contentDescription = item.label, tint = color,
@@ -109,14 +104,21 @@ fun ProfileAvatarButton(initials: String, onClick: () -> Unit) {
 
 /** Global top app bar used on main screens. */
 @Composable
-fun MomentoTopBar(title: String, profileInitials: String, onProfileClick: () -> Unit, onSearchClick: () -> Unit) {
+fun MomentoTopBar(title: String, profileInitials: String, onProfileClick: () -> Unit, onSearchClick: () -> Unit, onSettingsClick: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(title, style = MaterialTheme.typography.titleMedium, color = MomentoOnSurface, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+        Box(modifier = Modifier.size(36.dp).clip(RoundedCornerShape(12.dp)).background(MomentoPrimary), contentAlignment = Alignment.Center) {
+            Icon(Icons.Default.AutoAwesome, null, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(19.dp))
+        }
+        Spacer(Modifier.width(10.dp))
+        Text(title, style = MaterialTheme.typography.titleLarge, color = MomentoOnSurface, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
         IconButton(onClick = onSearchClick) {
             Icon(Icons.Default.Search, "Search", tint = MomentoOnSurfaceVariant)
+        }
+        IconButton(onClick = onSettingsClick) {
+            Icon(Icons.Default.Settings, "Settings", tint = MomentoOnSurfaceVariant)
         }
         Spacer(modifier = Modifier.width(4.dp))
         ProfileAvatarButton(initials = profileInitials, onClick = onProfileClick)

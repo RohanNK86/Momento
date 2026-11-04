@@ -30,7 +30,7 @@ data class Goal(
     val title: String,
     val description: String = "",
     val targetDateMillis: Long = System.currentTimeMillis() + 2592000000L,
-    val progress: Float = 0f,          // 0.0 â€“ 1.0 (derived from currentValue/targetValue)
+    val progress: Float = 0f,          // 0.0 – 1.0 (derived from currentValue/targetValue)
     val currentValue: Float = 0f,
     val targetValue: Float = 100f,
     val milestones: String = "[]",     // JSON array of milestone strings
