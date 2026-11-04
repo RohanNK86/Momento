@@ -34,4 +34,3 @@ fun AddActionButton(onClick: () -> Unit, description: String = "Add") {
         Icon(Icons.Default.Add, contentDescription = null)
     }
 }
-

@@ -78,11 +78,11 @@ private fun BottomNavItem(modifier: Modifier = Modifier, item: NavItem, isSelect
                 }
                 Icon(
                     item.icon, contentDescription = item.label, tint = color,
-                    modifier = Modifier.size(22.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
             Spacer(modifier = Modifier.height(3.dp))
-            Text(item.label, color = color, fontSize = 10.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal)
+            Text(item.label, color = color, fontSize = 11.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal)
         }
     }
 }

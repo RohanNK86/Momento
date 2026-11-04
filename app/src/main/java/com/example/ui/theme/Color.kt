@@ -43,4 +43,3 @@ internal val DarkPaleViolet = Color(0xFF39324F)
 internal val DarkSage = Color(0xFF80CBB3)
 internal val DarkRed = Color(0xFFFFB4AB)
 internal val DarkHairline = Color(0xFF393740)
-

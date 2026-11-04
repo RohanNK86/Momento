@@ -1,0 +1,21 @@
+services:
+  apk-cdn:
+    image: nginx:1.27-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./infra/nginx/index.html:/usr/share/nginx/html/index.html:ro
+      - ./app/build/outputs/apk/release:/usr/share/nginx/html/apk:ro
+    restart: unless-stopped
+
+  android-build:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+    image: momento-android-build:latest
+    profiles: ["build"]
+    volumes:
+      - ./app/build/outputs:/workspace/app/build/outputs
+    environment:
+      JAVA_TOOL_OPTIONS: "-Dfile.encoding=UTF-8"

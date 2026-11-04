@@ -1,0 +1,34 @@
+# CI-style Android build image. Used by docker compose and Kubernetes Jobs.
+FROM eclipse-temurin:17-jdk-jammy
+
+ENV ANDROID_SDK_ROOT=/opt/android-sdk
+ENV GRADLE_HOME=/opt/gradle
+ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROOT}/platform-tools:${GRADLE_HOME}/bin"
+ENV JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget unzip git ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p ${ANDROID_SDK_ROOT}/cmdline-tools \
+    && wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdtools.zip \
+    && unzip -q /tmp/cmdtools.zip -d ${ANDROID_SDK_ROOT}/cmdline-tools \
+    && mv ${ANDROID_SDK_ROOT}/cmdline-tools/cmdline-tools ${ANDROID_SDK_ROOT}/cmdline-tools/latest \
+    && rm /tmp/cmdtools.zip \
+    && yes | sdkmanager --licenses >/dev/null \
+    && sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0" \
+    && wget -q https://services.gradle.org/distributions/gradle-9.3.1-bin.zip -O /tmp/gradle.zip \
+    && unzip -q /tmp/gradle.zip -d /opt \
+    && mv /opt/gradle-9.3.1 /opt/gradle \
+    && rm /tmp/gradle.zip
+
+WORKDIR /workspace
+COPY . /workspace
+
+RUN if [ ! -f debug.keystore ]; then \
+      keytool -genkey -noprompt -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "cn=Unknown, ou=Unknown, o=Unknown, c=Unknown"; \
+    fi
+
+CMD ["sh", "-c", "if [ -f ./gradlew ]; then chmod +x ./gradlew && ./gradlew assembleRelease --no-daemon; else gradle wrapper --gradle-version 9.3.1 && ./gradlew assembleRelease --no-daemon; fi"]
