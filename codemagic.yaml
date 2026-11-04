@@ -13,7 +13,7 @@ workflows:
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
       - name: Install Android SDK packages
         script: |
-          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+          "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$ANDROID_SDK_ROOT" "platforms;android-36" "build-tools;36.0.0"
       - name: Build debug APK
         script: |
           chmod +x ./gradlew
