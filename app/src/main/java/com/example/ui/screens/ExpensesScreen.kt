@@ -167,3 +167,4 @@ fun ExpenseItem(expense: Expense, catColors: List<Color>, catList: List<String>,
         }
     }
 }
+

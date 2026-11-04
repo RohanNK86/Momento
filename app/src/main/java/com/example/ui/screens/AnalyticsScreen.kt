@@ -71,7 +71,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
             Text("Your productivity at a glance", color = MomentoOnSurfaceVariant, fontSize = 13.sp)
         }
 
-        // ── Animated Arc Stats Row ─────────────────────────────────────────────
+        // â”€â”€ Animated Arc Stats Row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         item {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 AnimatedArcCard(Modifier.weight(1f), "Tasks", completionRate, MomentoPrimary, "${tasks.count { it.isCompleted }}/${tasks.size}")
@@ -80,7 +80,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // ── Weekly Activity ────────────────────────────────────────────────────
+        // â”€â”€ Weekly Activity â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         item {
             GlassCard {
                 Column {
@@ -106,7 +106,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // ── Summary Cards ──────────────────────────────────────────────────────
+        // â”€â”€ Summary Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         item {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 SummaryStatCard(Modifier.weight(1f), "Total Tasks", tasks.size.toString(), Icons.Default.TaskAlt, MomentoPrimary)
@@ -120,7 +120,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // ── Overdue Tasks ──────────────────────────────────────────────────────
+        // â”€â”€ Overdue Tasks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         if (overdueTasks.isNotEmpty()) {
             item {
                 GlassCard {
@@ -146,7 +146,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // ── Goal Progress Breakdown ────────────────────────────────────────────
+        // â”€â”€ Goal Progress Breakdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         if (goals.isNotEmpty()) {
             item {
                 GlassCard {
@@ -179,7 +179,7 @@ fun AnalyticsScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // ── Expense Category Breakdown ─────────────────────────────────────────
+        // â”€â”€ Expense Category Breakdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         if (expenses.isNotEmpty()) {
             item {
                 GlassCard {
@@ -256,3 +256,4 @@ private fun SummaryStatCard(modifier: Modifier, label: String, value: String, ic
         }
     }
 }
+

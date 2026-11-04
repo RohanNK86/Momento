@@ -103,7 +103,7 @@ fun CalendarScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // ── Calendar Grid ──────────────────────────────────────────────────────
+        // â”€â”€ Calendar Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         item {
             GlassCard(alpha = 0.07f) {
                 Column {
@@ -167,7 +167,7 @@ fun CalendarScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // ── Selected Day Detail ────────────────────────────────────────────────
+        // â”€â”€ Selected Day Detail â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         item {
             val selDateStr = SimpleDateFormat("EEEE, MMMM d", Locale.getDefault()).format(selCal.time)
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -209,7 +209,7 @@ fun CalendarScreen(viewModel: MomentoViewModel) {
             }
         }
 
-        // ── Upcoming Events ────────────────────────────────────────────────────
+        // â”€â”€ Upcoming Events â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         val upcomingAll = events.filter { it.timeMillis > System.currentTimeMillis() }.take(6)
         if (upcomingAll.isNotEmpty()) {
             item { Spacer(modifier = Modifier.height(4.dp)); Text("UPCOMING", color = MomentoOnSurfaceVariant, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp) }
@@ -252,3 +252,4 @@ fun EventListItem(event: Event, onDelete: () -> Unit) {
     }
     Spacer(modifier = Modifier.height(8.dp))
 }
+

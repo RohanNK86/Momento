@@ -189,3 +189,4 @@ fun AchievedGoalItem(goal: Goal, onDelete: () -> Unit) {
         IconButton(onClick = onDelete, modifier = Modifier.size(28.dp)) { Icon(Icons.Default.Delete, null, tint = MomentoOnSurfaceVariant, modifier = Modifier.size(14.dp)) }
     }
 }
+

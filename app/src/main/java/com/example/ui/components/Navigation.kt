@@ -122,3 +122,4 @@ fun MomentoTopBar(title: String, profileInitials: String, onProfileClick: () -> 
         ProfileAvatarButton(initials = profileInitials, onClick = onProfileClick)
     }
 }
+

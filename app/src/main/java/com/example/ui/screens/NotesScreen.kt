@@ -165,3 +165,4 @@ fun NoteCard(note: Note, viewModel: MomentoViewModel, onEdit: () -> Unit) {
         }
     }
 }
+

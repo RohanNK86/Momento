@@ -134,3 +134,4 @@ private fun SettingsActionRow(icon: ImageVector, title: String, subtitle: String
         Icon(Icons.Default.ChevronRight, null, tint = MomentoOnSurfaceVariant, modifier = Modifier.size(18.dp))
     }
 }
+

@@ -19,7 +19,7 @@ import com.example.data.Task
 import com.example.ui.theme.*
 import java.util.Calendar
 
-// ── Shared text field colors ─────────────────────────────────────────────────
+// â”€â”€ Shared text field colors â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun dialogTextFieldColors() = TextFieldDefaults.colors(
@@ -34,7 +34,7 @@ private fun dialogTextFieldColors() = TextFieldDefaults.colors(
     unfocusedLabelColor     = MomentoOnSurfaceVariant
 )
 
-// ── Add Task Dialog ──────────────────────────────────────────────────────────
+// â”€â”€ Add Task Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTaskDialog(onDismiss: () -> Unit, onAdd: (String, Task.Priority, String, String, Long?) -> Unit) {
@@ -88,7 +88,7 @@ fun AddTaskDialog(onDismiss: () -> Unit, onAdd: (String, Task.Priority, String, 
     }
 }
 
-// ── Add Goal Dialog ──────────────────────────────────────────────────────────
+// â”€â”€ Add Goal Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddGoalDialog(onDismiss: () -> Unit, onAdd: (String, String, Long?) -> Unit) {
@@ -124,7 +124,7 @@ fun AddGoalDialog(onDismiss: () -> Unit, onAdd: (String, String, Long?) -> Unit)
     }
 }
 
-// ── Add Event Dialog ─────────────────────────────────────────────────────────
+// â”€â”€ Add Event Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEventDialog(onDismiss: () -> Unit, onAdd: (String, String, Long, String) -> Unit) {
@@ -184,7 +184,7 @@ fun AddEventDialog(onDismiss: () -> Unit, onAdd: (String, String, Long, String) 
     }
 }
 
-// ── Add Expense Dialog ───────────────────────────────────────────────────────
+// â”€â”€ Add Expense Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddExpenseDialog(onDismiss: () -> Unit, onAdd: (String, Double, String) -> Unit) {
@@ -223,7 +223,7 @@ fun AddExpenseDialog(onDismiss: () -> Unit, onAdd: (String, Double, String) -> U
     }
 }
 
-// ── Add Habit Dialog ─────────────────────────────────────────────────────────
+// â”€â”€ Add Habit Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddHabitDialog(onDismiss: () -> Unit, onAdd: (String, String, String, String) -> Unit) {
@@ -271,7 +271,7 @@ fun AddHabitDialog(onDismiss: () -> Unit, onAdd: (String, String, String, String
     }
 }
 
-// ── Add Note Dialog ──────────────────────────────────────────────────────────
+// â”€â”€ Add Note Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddNoteDialog(
@@ -302,7 +302,7 @@ fun AddNoteDialog(
     }
 }
 
-// ── Focus Mode Dialog (Pomodoro) ─────────────────────────────────────────────
+// â”€â”€ Focus Mode Dialog (Pomodoro) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @Composable
 fun FocusModeDialog(onDismiss: () -> Unit) {
     Dialog(onDismissRequest = onDismiss, properties = androidx.compose.ui.window.DialogProperties(usePlatformDefaultWidth = false)) {
@@ -347,3 +347,4 @@ fun FocusModeDialog(onDismiss: () -> Unit) {
         }
     }
 }
+

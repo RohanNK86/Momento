@@ -218,3 +218,4 @@ fun TaskItemCard(task: Task, onToggle: () -> Unit, onEdit: () -> Unit, onDelete:
         }
     }
 }
+

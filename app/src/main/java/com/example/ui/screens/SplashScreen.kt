@@ -46,3 +46,4 @@ fun SplashScreen(onNavigateToHome: () -> Unit) {
         }
     }
 }
+

@@ -158,7 +158,7 @@ fun DashboardScreen(
             }
         }
 
-        // ── Quick Stats ───────────────────────────────────────────────────────
+        // â”€â”€ Quick Stats â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         item {
             AnimatedVisibility(visible = visible, enter = fadeIn(tween(300, 100)) + slideInVertically(tween(300, 100)) { 40 }) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -232,7 +232,7 @@ fun DashboardScreen(
             }
         }
 
-        // ── Habits Today ──────────────────────────────────────────────────────
+        // â”€â”€ Habits Today â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         item {
             AnimatedVisibility(visible = visible, enter = fadeIn(tween(600, 250)) + slideInVertically(tween(400, 250)) { 40 }) {
                 GlassCard {
@@ -276,7 +276,7 @@ fun DashboardScreen(
             }
         }
 
-        // ── Upcoming Events ───────────────────────────────────────────────────
+        // â”€â”€ Upcoming Events â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         item {
             AnimatedVisibility(visible = visible, enter = fadeIn(tween(700, 300)) + slideInVertically(tween(400, 300)) { 40 }) {
                 GlassCard {
@@ -320,7 +320,7 @@ fun DashboardScreen(
             }
         }
 
-        // ── Quick Shortcuts ───────────────────────────────────────────────────
+        // â”€â”€ Quick Shortcuts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         item {
             AnimatedVisibility(visible = visible, enter = fadeIn(tween(800, 350))) {
                 Column {
@@ -393,3 +393,4 @@ private fun ShortcutCard(modifier: Modifier, label: String, icon: ImageVector, c
         Text(label, color = MomentoOnSurface, fontSize = 11.sp, fontWeight = FontWeight.Medium)
     }
 }
+

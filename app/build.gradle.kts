@@ -58,10 +58,6 @@ android {
   testOptions { unitTests { isIncludeAndroidResources = true } }
 }
 
-tasks.withType<JavaCompile>().configureEach {
-  options.encoding = "UTF-8"
-}
-
 // Some unused dependencies are commented out below instead of being removed.
 // This makes it easy to add them back in the future if needed.
 dependencies {
@@ -117,3 +113,4 @@ dependencies {
   "ksp"(libs.androidx.room.compiler)
   // "ksp"(libs.moshi.kotlin.codegen)
 }
+

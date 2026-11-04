@@ -179,3 +179,4 @@ private fun SearchResultCard(title: String, subtitle: String, icon: ImageVector,
         Icon(Icons.Default.ChevronRight, null, tint = MomentoOnSurfaceVariant, modifier = Modifier.size(16.dp))
     }
 }
+
