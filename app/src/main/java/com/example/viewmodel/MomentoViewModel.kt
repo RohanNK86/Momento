@@ -11,11 +11,10 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.text.SimpleDateFormat
 import java.util.*
-import io.github.jan.supabase.gotrue.auth
-import io.github.jan.supabase.postgrest.postgrest
-import kotlinx.serialization.Serializable
 
 class MomentoViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val preferences = application.getSharedPreferences("momento_preferences", android.content.Context.MODE_PRIVATE)
 
     private val database = MomentoDatabase.getDatabase(application)
     private val repository = MomentoRepository(
@@ -51,30 +50,14 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope, SharingStarted.WhileSubscribed(5000), null
     )
 
-    @Serializable
-    data class SupabaseProfile(
-        val id: String,
-        val name: String,
-        val gender: String,
-        val dateOfBirth: Long?,
-        val occupation: String,
-        val email: String,
-        val phone: String,
-        val weightKg: Float?,
-        val heightCm: Float?,
-        val bio: String,
-        val goalsText: String,
-        val avatarColor: String
-    )
-
     // ── Greeting ──────────────────────────────────────────────────────────────
     fun getGreeting(name: String): String {
         val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
         return when {
-            hour in 5..11  -> "Good Morning, $name ☀️"
-            hour in 12..16 -> "Good Afternoon, $name ☀️"
-            hour in 17..20 -> "Good Evening, $name 🌇"
-            else           -> "Good Night, $name 🌙"
+            hour in 5..11  -> "Good Morning, $name"
+            hour in 12..16 -> "Good Afternoon, $name"
+            hour in 17..20 -> "Good Evening, $name"
+            else           -> "Good Night, $name"
         }
     }
 
@@ -109,6 +92,10 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
 
     fun deleteTask(task: Task) = viewModelScope.launch {
         repository.deleteTask(task.id)
+    }
+
+    fun updateTask(task: Task) = viewModelScope.launch {
+        repository.updateTask(task)
     }
 
     fun archiveTask(task: Task) = viewModelScope.launch {
@@ -295,33 +282,10 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
 
     // ── Profile Operations ────────────────────────────────────────────────────
     fun saveProfile(profile: UserProfile) = viewModelScope.launch {
-        // Save locally
         repository.saveProfile(profile)
-        
-        // Save to Supabase
-        try {
-            val user = SupabaseClient.client.auth.currentUserOrNull()
-            if (user != null) {
-                val supabaseProfile = SupabaseProfile(
-                    id = user.id,
-                    name = profile.name,
-                    gender = profile.gender,
-                    dateOfBirth = profile.dateOfBirth,
-                    occupation = profile.occupation,
-                    email = profile.email,
-                    phone = profile.phone,
-                    weightKg = profile.weightKg,
-                    heightCm = profile.heightCm,
-                    bio = profile.bio,
-                    goalsText = profile.goalsText,
-                    avatarColor = profile.avatarColor
-                )
-                SupabaseClient.client.postgrest["profiles"].upsert(supabaseProfile)
-            }
-        } catch (e: Exception) {
-            // Silently fail if offline or error
-        }
     }
+
+    fun clearAllData() = viewModelScope.launch { repository.clearAllData() }
 
     fun getInitials(name: String): String {
         return name.trim().split(" ")
@@ -351,7 +315,7 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
         "The future depends on what you do today." to "Mahatma Gandhi",
         "Success is not final, failure is not fatal." to "Winston Churchill",
         "Believe you can and you're halfway there." to "Theodore Roosevelt",
-        "Your limitation—it's only your imagination." to "Unknown",
+        "Your limitation - it's only your imagination." to "Unknown",
         "Push yourself, because no one else is going to do it for you." to "Unknown",
         "Great things never come from comfort zones." to "Unknown",
         "Dream it. Wish it. Do it." to "Unknown",
@@ -369,64 +333,84 @@ class MomentoViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             repository.userProfile.collect { profile ->
                 if (profile == null) {
-                    repository.saveProfile(UserProfile(name = "Rohan"))
+                    repository.saveProfile(UserProfile(name = "You"))
                 }
             }
         }
+        // Keep the app populated with the original, clearly editable starter content.
+        // These records are created only for empty collections and remain ordinary local data.
         viewModelScope.launch {
             repository.allTasks.collect { list ->
-                if (list.isEmpty()) {
+                if (list.isEmpty() && !preferences.getBoolean("sample_tasks_seeded", false)) {
+                    preferences.edit().putBoolean("sample_tasks_seeded", true).apply()
                     repository.insertTask(Task(title = "Finalize Q4 Marketing Deck", priority = Task.Priority.HIGH, isToday = true, category = "Work"))
                     repository.insertTask(Task(title = "Review Design System Updates", priority = Task.Priority.MEDIUM, isToday = true, category = "Work"))
                     repository.insertTask(Task(title = "Schedule Team 1:1s", priority = Task.Priority.LOW, isToday = true, category = "Work"))
+                } else if (list.isNotEmpty()) {
+                    preferences.edit().putBoolean("sample_tasks_seeded", true).apply()
                 }
             }
         }
         viewModelScope.launch {
             repository.allGoals.collect { list ->
-                if (list.isEmpty()) {
+                if (list.isEmpty() && !preferences.getBoolean("sample_goals_seeded", false)) {
+                    preferences.edit().putBoolean("sample_goals_seeded", true).apply()
                     repository.insertGoal(Goal(title = "Launch MVP", progress = 0.75f, currentValue = 75f, status = Goal.GoalStatus.ON_TRACK))
                     repository.insertGoal(Goal(title = "Learn Jetpack Compose", progress = 0.40f, currentValue = 40f, status = Goal.GoalStatus.ON_TRACK))
                     repository.insertGoal(Goal(title = "Run 5k Daily", progress = 0.20f, currentValue = 20f, status = Goal.GoalStatus.AT_RISK))
                     repository.insertGoal(Goal(title = "Read 12 Books", progress = 1.0f, currentValue = 100f, status = Goal.GoalStatus.COMPLETED))
+                } else if (list.isNotEmpty()) {
+                    preferences.edit().putBoolean("sample_goals_seeded", true).apply()
                 }
             }
         }
         viewModelScope.launch {
             repository.allEvents.collect { list ->
-                if (list.isEmpty()) {
+                if (list.isEmpty() && !preferences.getBoolean("sample_events_seeded", false)) {
+                    preferences.edit().putBoolean("sample_events_seeded", true).apply()
                     val now = System.currentTimeMillis()
-                    repository.insertEvent(Event(title = "Design Sync", timeMillis = now + 3600000, category = "Work", color = "#6366F1"))
-                    repository.insertEvent(Event(title = "Gym Session", timeMillis = now + 86400000, category = "Health", color = "#10B981"))
-                    repository.insertEvent(Event(title = "Dinner with Sarah", timeMillis = now + 172800000, category = "Personal", color = "#A855F7"))
-                    repository.insertEvent(Event(title = "Dentist Appointment", timeMillis = now + 259200000, category = "Health", color = "#F43F5E"))
+                    repository.insertEvent(Event(title = "Design Sync", timeMillis = now + 3600000, category = "Work", color = "#6857C8"))
+                    repository.insertEvent(Event(title = "Gym Session", timeMillis = now + 86400000, category = "Health", color = "#26836C"))
+                    repository.insertEvent(Event(title = "Dinner with Sarah", timeMillis = now + 172800000, category = "Personal", color = "#776F9F"))
+                    repository.insertEvent(Event(title = "Dentist Appointment", timeMillis = now + 259200000, category = "Health", color = "#B54748"))
+                } else if (list.isNotEmpty()) {
+                    preferences.edit().putBoolean("sample_events_seeded", true).apply()
                 }
             }
         }
         viewModelScope.launch {
             repository.allExpenses.collect { list ->
-                if (list.isEmpty()) {
+                if (list.isEmpty() && !preferences.getBoolean("sample_expenses_seeded", false)) {
+                    preferences.edit().putBoolean("sample_expenses_seeded", true).apply()
                     repository.insertExpense(Expense(title = "Dinner at Vue", amount = 124.50, dateMillis = System.currentTimeMillis(), category = "Food"))
                     repository.insertExpense(Expense(title = "Monthly Rent", amount = 2100.00, dateMillis = System.currentTimeMillis(), category = "Housing"))
                     repository.insertExpense(Expense(title = "Shell Station", amount = 45.00, dateMillis = System.currentTimeMillis(), category = "Transport"))
+                } else if (list.isNotEmpty()) {
+                    preferences.edit().putBoolean("sample_expenses_seeded", true).apply()
                 }
             }
         }
         viewModelScope.launch {
             repository.allHabits.collect { list ->
-                if (list.isEmpty()) {
-                    repository.insertHabit(Habit(name = "Morning Meditation", frequency = "DAILY", color = "#A855F7", icon = "self_improvement", currentStreak = 5, longestStreak = 12))
-                    repository.insertHabit(Habit(name = "Read 30 Minutes", frequency = "DAILY", color = "#10B981", icon = "menu_book", currentStreak = 3, longestStreak = 7))
-                    repository.insertHabit(Habit(name = "Drink 8 Glasses Water", frequency = "DAILY", color = "#6366F1", icon = "water_drop", currentStreak = 8, longestStreak = 8))
-                    repository.insertHabit(Habit(name = "Evening Walk", frequency = "DAILY", color = "#F59E0B", icon = "directions_walk", currentStreak = 2, longestStreak = 14))
+                if (list.isEmpty() && !preferences.getBoolean("sample_habits_seeded", false)) {
+                    preferences.edit().putBoolean("sample_habits_seeded", true).apply()
+                    repository.insertHabit(Habit(name = "Morning Meditation", frequency = "DAILY", color = "#776F9F", icon = "self_improvement", currentStreak = 5, longestStreak = 12))
+                    repository.insertHabit(Habit(name = "Read 30 Minutes", frequency = "DAILY", color = "#26836C", icon = "menu_book", currentStreak = 3, longestStreak = 7))
+                    repository.insertHabit(Habit(name = "Drink 8 Glasses Water", frequency = "DAILY", color = "#6857C8", icon = "water_drop", currentStreak = 8, longestStreak = 8))
+                    repository.insertHabit(Habit(name = "Evening Walk", frequency = "DAILY", color = "#B58A37", icon = "directions_walk", currentStreak = 2, longestStreak = 14))
+                } else if (list.isNotEmpty()) {
+                    preferences.edit().putBoolean("sample_habits_seeded", true).apply()
                 }
             }
         }
         viewModelScope.launch {
             repository.allNotes.collect { list ->
-                if (list.isEmpty()) {
-                    repository.insertNote(Note(title = "Project Ideas", content = "Build a habit tracker app with streak animations and daily reminders.", isPinned = true, tags = "work,ideas", color = "#1A1F2D"))
-                    repository.insertNote(Note(title = "Book Recommendations", content = "1. Atomic Habits\n2. Deep Work\n3. The Psychology of Money", tags = "books,reading", color = "#22283A"))
+                if (list.isEmpty() && !preferences.getBoolean("sample_notes_seeded", false)) {
+                    preferences.edit().putBoolean("sample_notes_seeded", true).apply()
+                    repository.insertNote(Note(title = "Project Ideas", content = "Build a habit tracker app with streak animations and daily reminders.", isPinned = true, tags = "work,ideas"))
+                    repository.insertNote(Note(title = "Book Recommendations", content = "1. Atomic Habits\n2. Deep Work\n3. The Psychology of Money", tags = "books,reading"))
+                } else if (list.isNotEmpty()) {
+                    preferences.edit().putBoolean("sample_notes_seeded", true).apply()
                 }
             }
         }

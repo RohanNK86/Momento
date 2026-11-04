@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: momento-apk
+  namespace: momento
+  labels:
+    app: momento-apk
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: momento-apk
+  template:
+    metadata:
+      labels:
+        app: momento-apk
+    spec:
+      containers:
+        - name: nginx
+          image: momento-apk:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: momento-apk
+  namespace: momento
+spec:
+  type: LoadBalancer
+  selector:
+    app: momento-apk
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80

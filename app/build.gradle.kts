@@ -4,7 +4,6 @@ plugins {
   alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.google.devtools.ksp)
   alias(libs.plugins.roborazzi)
-  alias(libs.plugins.secrets)
 }
 
 android {
@@ -15,8 +14,8 @@ android {
     applicationId = "com.aistudio.momento.vbxpz"
     minSdk = 24
     targetSdk = 36
-    versionCode = 1
-    versionName = "1.0"
+    versionCode = 2
+    versionName = "1.1"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -55,16 +54,12 @@ android {
   }
   buildFeatures {
     compose = true
-    buildConfig = true
   }
   testOptions { unitTests { isIncludeAndroidResources = true } }
 }
 
-// Configure the Secrets Gradle Plugin to use .env and .env.example files
-// to match the convention used in Web projects.
-secrets {
-  propertiesFileName = ".env"
-  defaultPropertiesFileName = ".env.example"
+tasks.withType<JavaCompile>().configureEach {
+  options.encoding = "UTF-8"
 }
 
 // Some unused dependencies are commented out below instead of being removed.
@@ -93,10 +88,6 @@ dependencies {
   implementation(libs.androidx.room.ktx)
   implementation(libs.androidx.room.runtime)
   implementation(libs.kotlinx.serialization.json)
-  implementation(platform(libs.supabase.bom))
-  implementation(libs.supabase.gotrue)
-  implementation(libs.supabase.postgrest)
-  implementation(libs.ktor.client.android)
   // implementation(libs.coil.compose)
   // implementation(libs.converter.moshi)
   // implementation(libs.firebase.ai)

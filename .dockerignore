@@ -1,0 +1,14 @@
+.gradle
+.idea
+.kotlin
+build
+app/build
+**/.DS_Store
+local.properties
+debug.keystore
+*.iml
+.git
+captures
+.cxx
+.env
+artifacts

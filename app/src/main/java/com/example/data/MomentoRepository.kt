@@ -51,4 +51,13 @@ class MomentoRepository(
 
     // Profile
     suspend fun saveProfile(profile: UserProfile) = userProfileDao.insertOrUpdateProfile(profile)
+
+    suspend fun clearAllData() {
+        taskDao.deleteAllTasks()
+        goalDao.deleteAllGoals()
+        eventDao.deleteAllEvents()
+        expenseDao.deleteAllExpenses()
+        habitDao.deleteAllHabits()
+        noteDao.deleteAllNotes()
+    }
 }

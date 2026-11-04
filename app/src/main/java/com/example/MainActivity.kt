@@ -1,20 +1,17 @@
 package com.example
 
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -27,11 +24,20 @@ import com.example.ui.theme.*
 import com.example.viewmodel.MomentoViewModel
 
 class MainActivity : ComponentActivity() {
+    override fun attachBaseContext(newBase: Context) {
+        val config = Configuration(newBase.resources.configuration)
+        if (config.fontScale < 0.95f) config.fontScale = 1.0f
+        if (config.fontScale > 1.2f) config.fontScale = 1.15f
+        super.attachBaseContext(newBase.createConfigurationContext(config))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AppTheme { MomentoApp() }
+            AppTheme {
+                AppFrame { MomentoApp() }
+            }
         }
     }
 }
@@ -47,7 +53,7 @@ fun MomentoApp() {
     val viewModel: MomentoViewModel = viewModel()
 
     val profile by viewModel.userProfile.collectAsStateWithLifecycle()
-    val profileInitials = viewModel.getInitials(profile?.name ?: "Rohan")
+    val profileInitials = viewModel.getInitials(profile?.name ?: "You")
 
     val showChrome = currentRoute in mainRoutes
 
@@ -65,37 +71,14 @@ fun MomentoApp() {
     }
 
     Scaffold(
+        containerColor = MomentoBackground,
         bottomBar = {
             if (showChrome) {
                 BottomNavBar(currentRoute = currentRoute) { route -> navigate(route) }
             }
         }
     ) { innerPadding ->
-        // Glowing ambient background
-        Box(modifier = Modifier.fillMaxSize().background(MomentoBackground)) {
-            Box(modifier = Modifier.fillMaxWidth(1.4f).fillMaxHeight(0.55f).align(Alignment.TopStart).offset(x = (-80).dp, y = (-80).dp).background(Brush.radialGradient(listOf(MomentoPrimary.copy(alpha = 0.18f), Color.Transparent), radius = 900f)))
-            Box(modifier = Modifier.fillMaxWidth(1.2f).fillMaxHeight(0.45f).align(Alignment.BottomEnd).offset(x = 80.dp, y = 80.dp).background(Brush.radialGradient(listOf(MomentoTertiary.copy(alpha = 0.12f), Color.Transparent), radius = 700f)))
-            Box(modifier = Modifier.fillMaxWidth(0.7f).fillMaxHeight(0.4f).align(Alignment.CenterEnd).background(Brush.radialGradient(listOf(MomentoSecondary.copy(alpha = 0.10f), Color.Transparent), radius = 500f)))
-
-            Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-                // Top bar for main screens
-                if (showChrome) {
-                    val screenTitle = when (currentRoute) {
-                        "home"     -> "Momento"
-                        "tasks"    -> "Tasks"
-                        "habits"   -> "Habits"
-                        "events"   -> "Events"
-                        "expenses" -> "Expenses"
-                        else       -> "Momento"
-                    }
-                    MomentoTopBar(
-                        title = screenTitle,
-                        profileInitials = profileInitials,
-                        onProfileClick = { navController.navigate("profile") },
-                        onSearchClick  = { navController.navigate("search") }
-                    )
-                }
-
+        Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
                 NavHost(
                     navController = navController,
                     startDestination = "splash",
@@ -105,12 +88,17 @@ fun MomentoApp() {
                     popEnterTransition = { fadeIn(tween(220)) + slideInHorizontally(tween(220)) { -40 } },
                     popExitTransition  = { fadeOut(tween(180)) + slideOutHorizontally(tween(220)) { 40 } }
                 ) {
-                    composable("splash") {
-                        SplashScreen(
-                            onNavigateToHome = { navigate("home") }
+                    composable("splash") { SplashScreen(onNavigateToHome = { navigate("home") }) }
+                    composable("home") {
+                        DashboardScreen(
+                            viewModel,
+                            onFocusModeClick = { showFocusMode = true },
+                            onNavigate = { navigate(it) },
+                            profileInitials = profileInitials,
+                            onProfileClick = { navigate("profile") },
+                            onSearchClick = { navigate("search") }
                         )
                     }
-                    composable("home")     { DashboardScreen(viewModel, onFocusModeClick = { showFocusMode = true }, onNavigate = { navController.navigate(it) }) }
                     composable("tasks")    { TasksScreen(viewModel) }
                     composable("habits")   { HabitsScreen(viewModel) }
                     composable("events")   { CalendarScreen(viewModel) }
@@ -122,7 +110,6 @@ fun MomentoApp() {
                     composable("profile")  { ProfileScreen(viewModel, onNavigateBack = { navController.popBackStack() }) }
                     composable("settings") { SettingsScreen(viewModel, onNavigateBack = { navController.popBackStack() }) }
                 }
-            }
         }
-    }
+}
 }

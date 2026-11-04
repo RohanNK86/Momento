@@ -5,25 +5,34 @@ workflows:
     instance_type: mac_mini_m2
     environment:
       java: 17
-      groups:
-        - supabase_credentials
+      vars:
+        JAVA_TOOL_OPTIONS: "-Dfile.encoding=UTF-8"
+        GRADLE_OPTS: "-Dfile.encoding=UTF-8 -Dkotlin.daemon.jvm.options=-Dfile.encoding=UTF-8"
+        LANG: en_US.UTF-8
+        LC_ALL: en_US.UTF-8
     scripts:
-      - name: Create .env file for secrets
+      - name: Set UTF-8 locale
         script: |
-          echo "SUPABASE_URL=$SUPABASE_URL" > "$CM_BUILD_DIR/.env"
-          echo "SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY" >> "$CM_BUILD_DIR/.env"
+          export LANG=en_US.UTF-8
+          export LC_ALL=en_US.UTF-8
+          export JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
       - name: Set up local.properties
         script: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
       - name: Generate Gradle Wrapper
         script: |
-          gradle wrapper --gradle-version 9.3.1
+          if [ ! -f "$CM_BUILD_DIR/gradlew" ]; then
+            gradle wrapper --gradle-version 9.3.1
+          fi
+          chmod +x "$CM_BUILD_DIR/gradlew"
       - name: Generate debug keystore
         script: |
-          keytool -genkey -v -keystore "$CM_BUILD_DIR/debug.keystore" -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "cn=Unknown, ou=Unknown, o=Unknown, c=Unknown"
+          if [ ! -f "$CM_BUILD_DIR/debug.keystore" ]; then
+            keytool -genkey -v -keystore "$CM_BUILD_DIR/debug.keystore" -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "cn=Unknown, ou=Unknown, o=Unknown, c=Unknown"
+          fi
       - name: Build Android App (Release)
         script: |
-          ./gradlew assembleRelease
+          ./gradlew assembleRelease --no-daemon
     artifacts:
       - app/build/outputs/**/*.apk
     publishing:
