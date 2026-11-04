@@ -168,8 +168,8 @@ fun HabitCard(habit: Habit, viewModel: MomentoViewModel, onDelete: () -> Unit) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(habit.name, color = MomentoOnSurface, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("ðŸ”¥ ${habit.currentStreak} day streak", color = MomentoOnSurfaceVariant, fontSize = 12.sp)
-                    Text("â€¢ ${habit.frequency}", color = habitColor, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                    Text("🔥 ${habit.currentStreak} day streak", color = MomentoOnSurfaceVariant, fontSize = 12.sp)
+                    Text("• ${habit.frequency}", color = habitColor, fontSize = 12.sp, fontWeight = FontWeight.Medium)
                 }
             }
             Column(horizontalAlignment = Alignment.End) {

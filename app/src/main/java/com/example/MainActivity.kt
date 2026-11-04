@@ -53,9 +53,11 @@ fun MomentoApp() {
 
     fun navigate(route: String) {
         navController.navigate(route) {
-            popUpTo(navController.graph.startDestinationId) { saveState = true }
+            if (route in mainRoutes) {
+                popUpTo("home") { saveState = true }
+                restoreState = true
+            }
             launchSingleTop = true
-            restoreState = true
         }
     }
 
@@ -82,7 +84,8 @@ fun MomentoApp() {
                         title = screenTitle,
                         profileInitials = profileInitials,
                         onProfileClick = { navigate("profile") },
-                        onSearchClick  = { navigate("search") }
+                        onSearchClick  = { navigate("search") },
+                        onSettingsClick = { navigate("settings") }
                     )
                 }
 
@@ -95,7 +98,14 @@ fun MomentoApp() {
                     popEnterTransition = { fadeIn(tween(220)) + slideInHorizontally(tween(220)) { -40 } },
                     popExitTransition  = { fadeOut(tween(180)) + slideOutHorizontally(tween(220)) { 40 } }
                 ) {
-                    composable("splash") { SplashScreen(onNavigateToHome = { navigate("home") }) }
+                    composable("splash") {
+                        SplashScreen(onNavigateToHome = {
+                            navController.navigate("home") {
+                                popUpTo("splash") { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        })
+                    }
                     composable("home")     { DashboardScreen(viewModel, onFocusModeClick = { showFocusMode = true }, onNavigate = { navigate(it) }) }
                     composable("tasks")    { TasksScreen(viewModel) }
                     composable("habits")   { HabitsScreen(viewModel) }
@@ -104,7 +114,7 @@ fun MomentoApp() {
                     composable("goals")    { GoalsScreen(viewModel) }
                     composable("notes")    { NotesScreen(viewModel) }
                     composable("analytics"){ AnalyticsScreen(viewModel) }
-                    composable("search")   { SearchScreen(viewModel, onNavigate = { route -> navigate(route) }) }
+                    composable("search")   { SearchScreen(viewModel, onNavigate = { route -> navigate(route) }, onNavigateBack = { navController.popBackStack() }) }
                     composable("profile")  { ProfileScreen(viewModel, onNavigateBack = { navController.popBackStack() }) }
                     composable("settings") { SettingsScreen(viewModel, onNavigateBack = { navController.popBackStack() }) }
                 }

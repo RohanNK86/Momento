@@ -234,7 +234,7 @@ private fun ProfileField(label: String, value: String, icon: androidx.compose.ui
         } else {
             Column(modifier = Modifier.weight(1f)) {
                 Text(label, color = MomentoOnSurfaceVariant, fontSize = 11.sp)
-                Text(value.ifBlank { "â€”" }, color = MomentoOnSurface, fontWeight = FontWeight.Medium)
+                Text(value.ifBlank { "—" }, color = MomentoOnSurface, fontWeight = FontWeight.Medium)
             }
         }
     }
@@ -250,7 +250,7 @@ private fun ProfileFieldNumeric(label: String, value: String, icon: androidx.com
         } else {
             Column(modifier = Modifier.weight(1f)) {
                 Text(label, color = MomentoOnSurfaceVariant, fontSize = 11.sp)
-                Text(value.ifBlank { "â€”" }, color = MomentoOnSurface, fontWeight = FontWeight.Medium)
+                Text(value.ifBlank { "—" }, color = MomentoOnSurface, fontWeight = FontWeight.Medium)
             }
         }
     }

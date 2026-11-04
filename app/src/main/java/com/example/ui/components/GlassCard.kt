@@ -25,10 +25,10 @@ fun GlassCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .shadow(3.dp, RoundedCornerShape(cornerRadius))
+            .shadow(1.dp, RoundedCornerShape(cornerRadius))
             .clip(RoundedCornerShape(cornerRadius))
-            .background(MomentoSurfaceBase.copy(alpha = 0.9f))
-            .border(1.dp, MomentoOutline.copy(alpha = 0.8f), RoundedCornerShape(cornerRadius))
+            .background(MomentoSurfaceBase)
+            .border(1.dp, MomentoOutline.copy(alpha = 0.7f), RoundedCornerShape(cornerRadius))
             .animateContentSize()
             .padding(16.dp),
         content = content
