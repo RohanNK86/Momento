@@ -96,10 +96,12 @@ fun DashboardScreen(
     ) {
         item { Spacer(modifier = Modifier.height(8.dp)) }
 
-        // â”€â”€ Greeting Card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Greeting Card ─────────────────────────────────────────────────────
         item {
             AnimatedVisibility(visible = visible, enter = fadeIn() + slideInVertically { -40 }) {
-                Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                Column(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(24.dp)).background(MomentoPrimaryContainer).padding(20.dp)) {
+                    Text("YOUR DAILY SPACE", color = MomentoPrimary, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, letterSpacing = 1.2.sp)
+                    Spacer(modifier = Modifier.height(10.dp))
                     Text(greeting, style = MaterialTheme.typography.headlineMedium, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(dateString, style = MaterialTheme.typography.bodyMedium, color = MomentoOnSurfaceVariant)
@@ -119,7 +121,7 @@ fun DashboardScreen(
             }
         }
 
-        // â”€â”€ Quick Stats â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Quick Stats ───────────────────────────────────────────────────────
         item {
             AnimatedVisibility(visible = visible, enter = fadeIn(tween(300, 100)) + slideInVertically(tween(300, 100)) { 40 }) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -139,15 +141,15 @@ fun DashboardScreen(
                     Icon(Icons.Default.AccountBalanceWallet, null, tint = MomentoPrimary, modifier = Modifier.size(20.dp))
                     Spacer(Modifier.width(10.dp))
                     Text("Spent this month", color = MomentoOnSurfaceVariant, modifier = Modifier.weight(1f))
-                    Text("â‚¹${String.format(Locale.getDefault(), "%.2f", monthSpend)}", color = MomentoOnSurface, fontWeight = FontWeight.SemiBold)
+                    Text("₹${String.format(Locale.getDefault(), "%.2f", monthSpend)}", color = MomentoOnSurface, fontWeight = FontWeight.SemiBold)
                     Spacer(Modifier.width(4.dp))
                     Icon(Icons.Default.ChevronRight, null, tint = MomentoOnSurfaceVariant, modifier = Modifier.size(18.dp))
                 }
             }
         }
 
-        // â”€â”€ Today's Quote â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // â”€â”€ Today's Focus Tasks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Today's Quote ─────────────────────────────────────────────────────
+        // ── Today's Focus Tasks ───────────────────────────────────────────────
         item {
             AnimatedVisibility(visible = visible, enter = fadeIn(tween(500, 200)) + slideInVertically(tween(400, 200)) { 40 }) {
                 GlassCard {
@@ -163,7 +165,7 @@ fun DashboardScreen(
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         if (highPriorityTasks.isEmpty()) {
-                            Text("ðŸŽ‰ All high-priority tasks done!", color = MomentoTertiary, style = MaterialTheme.typography.bodyMedium)
+                            Text("🎉 All high-priority tasks done!", color = MomentoTertiary, style = MaterialTheme.typography.bodyMedium)
                         } else {
                             highPriorityTasks.forEach { task ->
                                 Row(
@@ -193,7 +195,7 @@ fun DashboardScreen(
             }
         }
 
-        // â”€â”€ Habits Today â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Habits Today ──────────────────────────────────────────────────────
         item {
             AnimatedVisibility(visible = visible, enter = fadeIn(tween(600, 250)) + slideInVertically(tween(400, 250)) { 40 }) {
                 GlassCard {
@@ -224,7 +226,7 @@ fun DashboardScreen(
                                     Icon(if (done) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked, null, tint = if (done) habitColor else MomentoOnSurfaceVariant, modifier = Modifier.size(24.dp))
                                     Spacer(modifier = Modifier.height(6.dp))
                                     Text(habit.name.take(10), color = if (done) habitColor else MomentoOnSurface, fontSize = 11.sp, fontWeight = FontWeight.Medium)
-                                    Text("ðŸ”¥ ${habit.currentStreak}", color = MomentoOnSurfaceVariant, fontSize = 10.sp)
+                                    Text("🔥 ${habit.currentStreak}", color = MomentoOnSurfaceVariant, fontSize = 10.sp)
                                 }
                             }
                         }
@@ -233,7 +235,7 @@ fun DashboardScreen(
             }
         }
 
-        // â”€â”€ Upcoming Events â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Upcoming Events ───────────────────────────────────────────────────
         item {
             AnimatedVisibility(visible = visible, enter = fadeIn(tween(700, 300)) + slideInVertically(tween(400, 300)) { 40 }) {
                 GlassCard {
@@ -277,7 +279,7 @@ fun DashboardScreen(
             }
         }
 
-        // â”€â”€ Quick Shortcuts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ── Quick Shortcuts ───────────────────────────────────────────────────
         item {
             AnimatedVisibility(visible = visible, enter = fadeIn(tween(800, 350))) {
                 Column {

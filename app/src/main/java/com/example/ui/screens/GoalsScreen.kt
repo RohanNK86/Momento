@@ -53,7 +53,7 @@ fun GoalsScreen(viewModel: MomentoViewModel) {
             title = { Text("Update Progress", color = MomentoOnSurface) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("${goal.title} â€” ${newProgress.toInt()}%", color = MomentoOnSurfaceVariant)
+                    Text("${goal.title} — ${newProgress.toInt()}%", color = MomentoOnSurfaceVariant)
                     Slider(value = newProgress, onValueChange = { newProgress = it }, valueRange = 0f..goal.targetValue, colors = SliderDefaults.colors(thumbColor = MomentoTertiary, activeTrackColor = MomentoTertiary))
                 }
             },
@@ -184,7 +184,7 @@ fun AchievedGoalItem(goal: Goal, onDelete: () -> Unit) {
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(goal.title, color = MomentoOnSurface, fontWeight = FontWeight.SemiBold)
-            Text("100% Complete ðŸŽ‰", color = MomentoTertiary, fontSize = 12.sp)
+            Text("100% Complete 🎉", color = MomentoTertiary, fontSize = 12.sp)
         }
         IconButton(onClick = onDelete, modifier = Modifier.size(28.dp)) { Icon(Icons.Default.Delete, null, tint = MomentoOnSurfaceVariant, modifier = Modifier.size(14.dp)) }
     }

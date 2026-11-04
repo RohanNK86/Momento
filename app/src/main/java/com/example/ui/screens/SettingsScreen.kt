@@ -44,7 +44,7 @@ fun SettingsScreen(viewModel: MomentoViewModel, onNavigateBack: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         // Top bar
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onNavigateBack) { Icon(Icons.Default.ArrowBack, null, tint = MomentoOnSurface) }
+            IconButton(onClick = onNavigateBack) { Icon(Icons.Default.ArrowBack, "Back", tint = MomentoOnSurface) }
             Text("Settings", style = MaterialTheme.typography.titleLarge, color = MomentoOnSurface, fontWeight = FontWeight.Bold)
         }
 
@@ -67,9 +67,9 @@ fun SettingsScreen(viewModel: MomentoViewModel, onNavigateBack: () -> Unit) {
             }
             item {
                 SettingsSection("Notifications") {
-                    SettingsInfoRow(Icons.Default.Notifications, "Task Reminders", "Enabled", MomentoTertiary)
-                    SettingsInfoRow(Icons.Default.Loop, "Habit Reminders", "Enabled", MomentoTertiary)
-                    SettingsInfoRow(Icons.Default.Event, "Event Alerts", "Enabled", MomentoTertiary)
+                    SettingsInfoRow(Icons.Default.Notifications, "Task Reminders", "Not available", MomentoOnSurfaceVariant)
+                    SettingsInfoRow(Icons.Default.Loop, "Habit Reminders", "Not available", MomentoOnSurfaceVariant)
+                    SettingsInfoRow(Icons.Default.Event, "Event Alerts", "Not available", MomentoOnSurfaceVariant)
                 }
             }
             item {

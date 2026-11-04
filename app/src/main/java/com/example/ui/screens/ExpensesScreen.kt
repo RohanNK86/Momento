@@ -75,7 +75,7 @@ fun ExpensesScreen(viewModel: MomentoViewModel) {
             Column {
                 Text("Total Spent", color = MomentoOnSurfaceVariant, fontSize = 13.sp)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text("â‚¹${String.format(java.util.Locale.US, "%.2f", total)}", color = MomentoOnSurface, fontSize = 32.sp, fontWeight = FontWeight.Bold)
+                Text("₹${String.format(java.util.Locale.US, "%.2f", total)}", color = MomentoOnSurface, fontSize = 32.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(12.dp))
                 // Category mini bars
                 catMap.entries.forEachIndexed { idx, (cat, amt) ->
@@ -88,7 +88,7 @@ fun ExpensesScreen(viewModel: MomentoViewModel) {
                         val animRatio by animateFloatAsState(ratio, tween(800, easing = EaseOutCubic), label = "cat_$cat")
                         LinearProgressIndicator(progress = { animRatio }, modifier = Modifier.weight(1f).height(5.dp).clip(RoundedCornerShape(3.dp)), color = cc, trackColor = MomentoSurfaceContainer)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("â‚¹${String.format(java.util.Locale.US, "%.0f", amt)}", color = cc, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                        Text("₹${String.format(java.util.Locale.US, "%.0f", amt)}", color = cc, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -157,7 +157,7 @@ fun ExpenseItem(expense: Expense, catColors: List<Color>, catList: List<String>,
                 Text(dateFmt.format(Date(expense.dateMillis)), color = MomentoOnSurfaceVariant, fontSize = 11.sp)
             }
         }
-        Text("â‚¹${String.format(java.util.Locale.US, "%.2f", expense.amount)}", color = MomentoOnSurface, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+        Text("₹${String.format(java.util.Locale.US, "%.2f", expense.amount)}", color = MomentoOnSurface, fontWeight = FontWeight.Bold, fontSize = 15.sp)
         Box {
             IconButton(onClick = { showMenu = true }, modifier = Modifier.size(28.dp)) { Icon(Icons.Default.MoreVert, null, tint = MomentoOnSurfaceVariant, modifier = Modifier.size(14.dp)) }
             DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }, modifier = Modifier.background(MomentoSurfaceContainerHigh)) {
