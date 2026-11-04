@@ -20,6 +20,12 @@ View your app in AI Studio: https://ai.studio/apps/6d40de99-dc2b-425e-9a04-63265
 5. Remove this line from the app's `build.gradle.kts` file: `signingConfig = signingConfigs.getByName("debugConfig")`
 6. Run the app on an emulator or physical device
 
+## Continuous Integration
+
+The app is built on Jenkins with the pipeline in [`Jenkinsfile`](Jenkinsfile).
+For agent requirements, job setup and pipeline parameters, see
+[`ci/jenkins/README.md`](ci/jenkins/README.md).
+
 **---------------------------------------------------------------------------------------------------------------------------------**
 
 <div align="center">

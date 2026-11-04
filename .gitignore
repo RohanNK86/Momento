@@ -16,3 +16,7 @@
 local.properties
 .env
 debug.keystore
+
+# Jenkins CI
+.gradle-home
+.android-home
