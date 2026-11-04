@@ -1,32 +1,22 @@
 workflows:
   android-workflow:
-    name: Momento Android Build
+    name: Momento Android debug APK
     max_build_duration: 120
     instance_type: mac_mini_m2
     environment:
       java: 17
-      groups:
-        - supabase_credentials
+      vars:
+        JAVA_TOOL_OPTIONS: "-Dfile.encoding=UTF-8"
     scripts:
-      - name: Create .env file for secrets
-        script: |
-          echo "SUPABASE_URL=$SUPABASE_URL" > "$CM_BUILD_DIR/.env"
-          echo "SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY" >> "$CM_BUILD_DIR/.env"
-      - name: Set up local.properties
+      - name: Set Android SDK location
         script: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
-      - name: Generate Gradle Wrapper
+      - name: Install Android SDK packages
         script: |
-          gradle wrapper --gradle-version 9.3.1
-      - name: Generate debug keystore
+          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - name: Build debug APK
         script: |
-          keytool -genkey -v -keystore "$CM_BUILD_DIR/debug.keystore" -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "cn=Unknown, ou=Unknown, o=Unknown, c=Unknown"
-      - name: Build Android App (Release)
-        script: |
-          ./gradlew assembleRelease
+          chmod +x ./gradlew
+          ./gradlew :app:assembleDebug --no-daemon
     artifacts:
-      - app/build/outputs/**/*.apk
-    publishing:
-      email:
-        recipients:
-          - rohankaradigudd@gmail.com
+      - app/build/outputs/apk/debug/*.apk
